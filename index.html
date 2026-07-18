@@ -263,24 +263,6 @@ main{display:flex;flex:1 1 auto;min-height:0;}
 #trashZone .big{font-family:var(--font-title);font-size:15px;color:var(--red);letter-spacing:1px;}
 #trashZone .small{font-size:10.5px;color:var(--sub);}
 #trashZone.drop-ok{border-color:var(--red);background:rgba(255,123,123,.14);}
-#selBar{
-  display:none;align-items:center;gap:10px;margin-top:10px;
-  background:rgba(0,0,0,.32);border:1px solid var(--line-strong);
-  border-radius:13px;padding:9px 13px;font-size:13px;
-}
-#selBar.show{display:flex;}
-#selBar .s-emoji{font-size:22px;}
-#selBar .s-info{flex:1;min-width:0;}
-#selBar .s-name{font-weight:700;}
-#selBar .s-price{font-size:11.5px;color:var(--sub);}
-#selBar .s-trash{
-  font-family:var(--font-title);font-size:13px;padding:8px 14px;border-radius:10px;
-  background:linear-gradient(160deg,#ff9d9d,#ef4444);color:#fff1f1;
-  box-shadow:0 3px 10px rgba(239,68,68,.3);
-  transition:transform .1s;white-space:nowrap;
-}
-#selBar .s-trash:active{transform:scale(.95);}
-
 #hint{
   position:relative;z-index:10;margin:0 auto 12px;flex:0 0 auto;
   font-size:12.5px;color:#c8cfef;background:rgba(10,14,35,.6);
@@ -614,14 +596,6 @@ main{display:flex;flex:1 1 auto;min-height:0;}
             </span>
             <div id="storeRow"></div>
           </div>
-          <div id="selBar">
-            <span class="s-emoji" id="selEmoji"></span>
-            <div class="s-info">
-              <div class="s-name" id="selName"></div>
-              <div class="s-price" id="selPrice"></div>
-            </div>
-            <button class="s-trash" id="selTrash">🗑 폐기</button>
-          </div>
           <div id="dock">
             <button id="spawnBtn">
               <span class="big">🍲 요리하기</span>
@@ -668,7 +642,8 @@ main{display:flex;flex:1 1 auto;min-height:0;}
           <div class="goal-card" id="debtCard">
             <h3>💸 보증금 빚 갚기</h3>
             <p>포장마차 보증금으로 빌린 <b>500만원</b>...<br>
-            남은 빚 <b id="debtLeft">500만원</b></p>
+            남은 빚 <b id="debtLeft">500만원</b><br>
+            <span style="font-size:11px;color:var(--sub)">재료비가 모자라면 외상으로 빚에 쌓입니다</span></p>
             <div class="goal-bar"><i id="debtFill"></i></div>
             <button class="goal-btn" id="payBtn" disabled>지금 가진 돈으로 갚기</button>
           </div>
@@ -836,9 +811,9 @@ function repLevel(){
   return lv;
 }
 function sellBonus(){ return (1 + repLevel()*0.1) * (1 + state.ups.plate*0.2); }
-function orderBonus(){ return 4 * (1 + state.ups.service*0.25); }
+function orderBonus(){ return 3 * (1 + state.ups.service*0.25); }
 function sellValue(t){ return Math.round(10 * Math.pow(3, t-1) * sellBonus()); }
-function spawnCost(){ return 2 * Math.pow(3, state.ups.pot-1); }
+function spawnCost(){ return 5 * Math.pow(3, state.ups.pot-1); } // 기본 단가의 50%
 function addMoney(v){ state.money += v; state.totalEarned += v; }
 // 신선도: born 시각부터 lifetimeMs가 지나면 타버린다 (냉장 선반은 시간이 멈춤)
 function lifetimeMs(){ return 120e3 * (1 + 0.5*state.ups.fire); }
@@ -883,7 +858,6 @@ const el = {
   money:$('money'), hearts:$('hearts'), repTitle:$('repTitle'), repFill:$('repFill'), repPts:$('repPts'),
   rushBadge:$('rushBadge'), rushLeft:$('rushLeft'),
   spawnBtn:$('spawnBtn'), spawnInfo:$('spawnInfo'), trashZone:$('trashZone'),
-  selBar:$('selBar'), selEmoji:$('selEmoji'), selName:$('selName'), selPrice:$('selPrice'), selTrash:$('selTrash'),
   hint:$('hint'), orderList:$('orderList'), upList:$('upList'), dexGrid:$('dexGrid'),
   debtLeft:$('debtLeft'), debtFill:$('debtFill'), payBtn:$('payBtn'), debtCard:$('debtCard'),
   toasts:$('toasts'), overlay:$('overlay'), modalCard:$('modalCard'),
@@ -1038,8 +1012,17 @@ function doSpawn(){
   el.spawnBtn.disabled = true;
   setTimeout(()=>{ spawnCooldown = false; el.spawnBtn.disabled = false; }, 350);
 
-  // 재료비: 가진 돈이 모자라면 있는 만큼만 (파산 방지)
-  state.money -= Math.min(spawnCost(), state.money);
+  // 재료비: 돈이 모자라면 부족분은 외상 — 빚에 쌓인다
+  const cost = spawnCost();
+  const pay = Math.min(cost, state.money);
+  state.money -= pay;
+  const credit = cost - pay;
+  if(credit > 0){
+    state.debt += credit;
+    const r = el.spawnBtn.getBoundingClientRect();
+    floatAt(r.left + r.width/2, r.top, '외상 +'+fmtWon(credit));
+    updateGoals();
+  }
 
   let t = state.ups.pot;
   const dblChance = 10 + state.ups.dbl*8;
@@ -1061,21 +1044,7 @@ let selected = null;
 function select(i){
   if(selected !== null) cellDivs[selected].classList.remove('sel');
   selected = i;
-  if(i !== null){
-    cellDivs[i].classList.add('sel');
-    const v = state.board[i];
-    if(v !== 0 && v !== CAT){
-      const t = Math.abs(v);
-      const f = FOODS[t-1];
-      el.selEmoji.textContent = f.emoji;
-      el.selEmoji.style.filter = v < 0 ? 'grayscale(1) brightness(.45)' : '';
-      el.selName.textContent = v < 0 ? '탄 '+f.name : f.name;
-      el.selPrice.textContent = v < 0 ? '못 먹게 됐어요 · 폐기만 가능' : '단가 '+fmtWon(sellValue(t))+' · 주문 전달용';
-      el.selBar.classList.add('show');
-      return;
-    }
-  }
-  el.selBar.classList.remove('show');
+  if(i !== null) cellDivs[i].classList.add('sel');
 }
 function trashCell(i){
   const v = state.board[i];
@@ -1089,9 +1058,6 @@ function trashCell(i){
   renderCell(i);
   updateOrderUI();
 }
-el.selTrash.addEventListener('click', ()=>{
-  if(selected !== null) trashCell(selected);
-});
 function collectCat(i){
   state.board[i] = 0;
   state.stats.cat++;
@@ -1513,7 +1479,7 @@ function updateGoals(){
   const done = state.debt <= 0;
   el.debtCard.classList.toggle('done', done);
   el.debtLeft.textContent = done ? '완납! 🎉' : fmtWon(state.debt);
-  el.debtFill.style.width = (100 * (1 - state.debt/DEBT_TOTAL))+'%';
+  el.debtFill.style.width = Math.max(0, 100 * (1 - state.debt/DEBT_TOTAL))+'%';
   el.payBtn.disabled = done || state.money <= 0;
   el.payBtn.textContent = done ? '✅ 상환 완료' :
     '지금 가진 돈으로 갚기'+(state.money>0 ? ' ('+fmtWon(Math.min(state.money,state.debt))+')' : '');

@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>달빛 포장마차 타이쿤</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E🏮%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   달빛 포장마차 타이쿤 — 스타일
+   ============================================================ */
+:root{
+  --bg0:#060a1e;
+  --bg1:#0d1330;
+  --bg2:#161d45;
+  --panel:rgba(15,21,50,.72);
+  --panel-solid:#111838;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.16);
+  --text:#eaeeff;
+  --sub:#9aa3c9;
+  --accent:#ff9f43;
+  --accent-deep:#f97316;
+  --gold:#ffd166;
+  --green:#5eeaa0;
+  --red:#ff7b7b;
+  --radius:16px;
+  --font-title:'Jua', 'Noto Sans KR', sans-serif;
+  --font-body:'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg0);
+  color:var(--text);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  touch-action:manipulation;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+#app{display:flex;flex-direction:column;height:100dvh;}
+
+/* ---------- 헤더 ---------- */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;height:58px;flex:0 0 auto;
+  background:linear-gradient(180deg, rgba(10,14,35,.95), rgba(10,14,35,.75));
+  border-bottom:1px solid var(--line);
+  position:relative;z-index:30;
+  backdrop-filter:blur(8px);
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo .mark{font-size:24px;filter:drop-shadow(0 0 8px rgba(255,120,60,.7));}
+.logo h1{font-family:var(--font-title);font-size:20px;font-weight:400;letter-spacing:1px;
+  background:linear-gradient(120deg,#ffd166,#ff9f43 60%,#ff7e5f);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.logo .tag{font-size:11px;color:var(--sub);margin-top:2px;display:block;letter-spacing:.5px;}
+.head-right{display:flex;align-items:center;gap:8px;}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:999px;font-size:13px;font-weight:500;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+}
+.chip.star{color:var(--gold);border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.08);}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;font-size:16px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background .15s, transform .1s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.12);}
+.icon-btn:active{transform:scale(.92);}
+.icon-btn.saved{color:var(--green);border-color:rgba(94,234,160,.4);}
+
+/* ---------- 레이아웃 ---------- */
+main{display:flex;flex:1 1 auto;min-height:0;}
+
+/* ---------- 밤 풍경 (씬) ---------- */
+#scene{
+  position:relative;flex:1 1 auto;min-width:0;overflow:hidden;
+  background:linear-gradient(180deg,#070b22 0%, #0c1233 42%, #1b1c4b 72%, #2c1f52 100%);
+  user-select:none;-webkit-user-select:none;cursor:pointer;
+}
+#sky{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:.7;
+  animation:twinkle 3.2s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.85}}
+.shoot{
+  position:absolute;width:110px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(255,255,255,0),#fff);
+  transform:rotate(-32deg);opacity:0;pointer-events:none;
+  animation:shoot 1.4s ease-out forwards;
+}
+@keyframes shoot{
+  0%{opacity:0;transform:rotate(-32deg) translateX(0);}
+  15%{opacity:.9;}
+  100%{opacity:0;transform:rotate(-32deg) translateX(-340px);}
+}
+#moon{
+  position:absolute;top:9%;right:12%;width:74px;height:74px;border-radius:50%;
+  background:radial-gradient(circle at 34% 32%, #fffbe9, #ffe9a8 55%, #f2cd6f);
+  box-shadow:0 0 40px 14px rgba(255,230,160,.28), 0 0 120px 50px rgba(255,220,140,.12);
+  pointer-events:none;
+}
+#moon::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 62% 60%, rgba(210,180,110,.4) 0 8%, transparent 9%),
+    radial-gradient(circle at 40% 70%, rgba(210,180,110,.35) 0 5%, transparent 6%),
+    radial-gradient(circle at 70% 32%, rgba(210,180,110,.3) 0 6%, transparent 7%);
+}
+#skyline{position:absolute;left:0;right:0;bottom:86px;height:180px;pointer-events:none;opacity:.85;}
+#skyline svg{width:100%;height:100%;display:block;}
+#ground{
+  position:absolute;left:0;right:0;bottom:0;height:88px;
+  background:linear-gradient(180deg,#141a3c, #0a0d22 80%);
+  border-top:1px solid rgba(120,130,200,.25);
+  pointer-events:none;
+}
+.light-pool{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  width:640px;height:120px;pointer-events:none;
+  background:radial-gradient(ellipse at center, rgba(255,150,60,.22), transparent 65%);
+}
+
+/* ---------- HUD ---------- */
+#hud{
+  position:absolute;top:22px;left:0;right:0;text-align:center;z-index:10;pointer-events:none;
+}
+#money{
+  font-family:var(--font-title);font-size:clamp(30px, 4.4vw, 46px);color:var(--gold);
+  text-shadow:0 0 24px rgba(255,190,80,.45), 0 2px 0 rgba(0,0,0,.4);
+  letter-spacing:1px;line-height:1.1;
+}
+.hud-chips{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.hud-chip{
+  font-size:12.5px;padding:5px 12px;border-radius:999px;color:#cfd6f5;
+  background:rgba(10,14,35,.55);border:1px solid var(--line);backdrop-filter:blur(4px);
+}
+.hud-chip b{color:#fff;font-weight:700;}
+#frenzyBadge{
+  display:none;margin:12px auto 0;width:fit-content;
+  font-family:var(--font-title);font-size:16px;color:#1d1302;
+  background:linear-gradient(120deg,#ffd166,#ff9f43);
+  padding:7px 18px;border-radius:999px;
+  box-shadow:0 0 22px rgba(255,170,60,.65);
+  animation:pulse .9s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+#hint{
+  position:absolute;bottom:104px;left:50%;transform:translateX(-50%);
+  font-size:13px;color:#c8cfef;background:rgba(10,14,35,.6);
+  padding:7px 16px;border-radius:999px;border:1px solid var(--line);
+  z-index:10;pointer-events:none;animation:hintbob 2s ease-in-out infinite;
+  white-space:nowrap;
+}
+@keyframes hintbob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+
+/* ---------- 포장마차 ---------- */
+#cartWrap{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  width:min(560px, 88%);z-index:5;
+  transition:filter .3s;
+}
+#cartWrap svg{width:100%;height:auto;display:block;
+  filter:drop-shadow(0 18px 30px rgba(0,0,0,.5));}
+#cartWrap.bounce{animation:cartbounce .18s ease-out;}
+@keyframes cartbounce{
+  0%{transform:translateX(-50%) scale(1);}
+  40%{transform:translateX(-50%) scale(.975) rotate(-.4deg);}
+  100%{transform:translateX(-50%) scale(1);}
+}
+.lantern-glow{filter:drop-shadow(0 0 10px rgba(255,110,70,.9));animation:flicker 3.4s ease-in-out infinite;}
+.lantern-glow.l2{animation-delay:1.6s;}
+@keyframes flicker{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(255,110,70,.9));}
+  46%{filter:drop-shadow(0 0 15px rgba(255,140,80,1));}
+  52%{filter:drop-shadow(0 0 7px rgba(255,110,70,.7));}
+}
+#steamAnchor{position:absolute;left:63%;top:40%;width:0;height:0;pointer-events:none;}
+.steam{
+  position:absolute;width:16px;height:16px;border-radius:50%;
+  background:rgba(235,240,255,.5);filter:blur(5px);
+  animation:steamrise 2.4s ease-out forwards;pointer-events:none;
+}
+@keyframes steamrise{
+  0%{opacity:0;transform:translateY(0) scale(.6);}
+  20%{opacity:.65;}
+  100%{opacity:0;transform:translateY(-84px) translateX(var(--drift,8px)) scale(1.9);}
+}
+
+/* ---------- 씬 이펙트 ---------- */
+.float-txt{
+  position:absolute;font-family:var(--font-title);font-size:19px;color:var(--gold);
+  text-shadow:0 0 10px rgba(255,190,80,.6), 0 1px 0 rgba(0,0,0,.5);
+  pointer-events:none;z-index:20;animation:floatup 1s ease-out forwards;white-space:nowrap;
+}
+@keyframes floatup{
+  0%{opacity:0;transform:translateY(6px) scale(.8);}
+  15%{opacity:1;transform:translateY(0) scale(1.05);}
+  100%{opacity:0;transform:translateY(-72px) scale(1);}
+}
+.customer{
+  position:absolute;bottom:42px;font-size:30px;z-index:4;pointer-events:none;
+  transition:left 7s linear;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.5));
+}
+.customer.bob{animation:custbob 1s ease-in-out infinite;}
+@keyframes custbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+#cat{
+  position:absolute;z-index:25;font-size:38px;line-height:1;
+  width:74px;height:74px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;
+  background:radial-gradient(circle, rgba(255,209,102,.4), rgba(255,159,67,.12) 65%, transparent 75%);
+  animation:catpop .5s cubic-bezier(.2,1.6,.4,1), catglow 1.2s ease-in-out infinite;
+  cursor:pointer;border:none;
+}
+#cat.show{display:flex;}
+@keyframes catpop{0%{transform:scale(0) rotate(-30deg);}100%{transform:scale(1) rotate(0);}}
+@keyframes catglow{0%,100%{box-shadow:0 0 18px 4px rgba(255,190,80,.5);}50%{box-shadow:0 0 30px 10px rgba(255,190,80,.75);}}
+#frenzyTint{
+  position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .6s;
+  background:radial-gradient(ellipse at 50% 80%, rgba(255,150,50,.16), transparent 70%);
+}
+body.frenzy #frenzyTint{opacity:1;}
+
+/* ---------- 우측 패널 ---------- */
+#panel{
+  flex:0 0 430px;display:flex;flex-direction:column;min-height:0;
+  background:var(--panel);backdrop-filter:blur(14px);
+  border-left:1px solid var(--line);z-index:20;
+}
+#tabs{display:flex;gap:4px;padding:12px 14px 0;flex:0 0 auto;}
+.tab{
+  flex:1;padding:10px 0 12px;font-size:14.5px;font-weight:700;color:var(--sub);
+  border-bottom:2px solid transparent;transition:color .15s;letter-spacing:.5px;
+  position:relative;
+}
+.tab:hover{color:#cdd4f2;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);
+  text-shadow:0 0 14px rgba(255,159,67,.5);}
+.tab .badge{
+  position:absolute;top:4px;right:14%;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 8px rgba(255,159,67,.9);display:none;
+}
+.tab.has-new .badge{display:block;}
+.tabpane{display:none;flex-direction:column;flex:1 1 auto;min-height:0;}
+.tabpane.active{display:flex;}
+.pane-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 10px;flex:0 0 auto;
+}
+.pane-head .ttl{font-size:13px;font-weight:700;color:var(--sub);letter-spacing:1px;}
+.pane-scroll{flex:1 1 auto;overflow-y:auto;padding:2px 14px 20px;min-height:0;}
+.pane-scroll::-webkit-scrollbar{width:8px;}
+.pane-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:8px;}
+.pane-scroll::-webkit-scrollbar-track{background:transparent;}
+
+/* 구매 배수 토글 */
+#buyModes{display:flex;gap:4px;background:rgba(0,0,0,.28);padding:3px;border-radius:10px;}
+.bm{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;color:var(--sub);transition:all .12s;}
+.bm.active{background:var(--accent);color:#221302;box-shadow:0 2px 8px rgba(255,159,67,.4);}
+
+/* ---------- 메뉴 카드 ---------- */
+.item-card{
+  display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;
+  padding:13px 14px;margin-bottom:10px;border-radius:var(--radius);
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  transition:border-color .2s, background .2s, transform .12s;
+}
+.item-card:hover{background:rgba(255,255,255,.06);border-color:var(--line-strong);}
+.item-emoji{
+  width:52px;height:52px;border-radius:14px;font-size:28px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg, rgba(255,159,67,.16), rgba(255,159,67,.05));
+  border:1px solid rgba(255,159,67,.2);
+}
+.item-info{min-width:0;}
+.item-top{display:flex;align-items:baseline;gap:8px;}
+.item-name{font-size:15px;font-weight:700;}
+.item-lv{font-family:var(--font-title);font-size:12.5px;color:var(--accent);}
+.item-sub{font-size:12px;color:var(--sub);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-sub b{color:#d9e0ff;font-weight:500;}
+.ms-bar{height:3px;border-radius:3px;background:rgba(255,255,255,.09);margin-top:7px;overflow:hidden;}
+.ms-bar i{display:block;height:100%;border-radius:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--gold));
+  transition:width .3s;}
+.buy-btn{
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  min-width:96px;padding:8px 12px;border-radius:12px;
+  background:linear-gradient(160deg,#ffb25e,#f97316);
+  color:#2a1502;box-shadow:0 4px 14px rgba(249,115,22,.35), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .1s, box-shadow .15s, filter .15s;
+}
+.buy-btn:hover{filter:brightness(1.07);}
+.buy-btn:active{transform:translateY(1px) scale(.97);}
+.buy-btn .buy-n{font-size:11px;font-weight:800;opacity:.75;letter-spacing:.5px;}
+.buy-btn .buy-cost{font-family:var(--font-title);font-size:14.5px;}
+.buy-btn:disabled{
+  background:rgba(255,255,255,.07);color:var(--sub);box-shadow:none;cursor:default;filter:none;
+}
+.buy-btn:disabled:active{transform:none;}
+.item-card.locked{opacity:.55;}
+.item-card.locked .item-emoji{filter:grayscale(1) brightness(.6);}
+.item-card.locked .item-name{color:var(--sub);}
+
+/* ---------- 업그레이드 ---------- */
+.up-card{
+  display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;
+  padding:12px 14px;margin-bottom:10px;border-radius:var(--radius);
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  transition:border-color .2s;
+}
+.up-card:hover{border-color:rgba(255,209,102,.35);}
+.up-icon{
+  width:46px;height:46px;border-radius:12px;font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.22);
+}
+.up-name{font-size:14px;font-weight:700;}
+.up-desc{font-size:12px;color:var(--sub);margin-top:2px;}
+.up-buy{
+  font-family:var(--font-title);font-size:13.5px;padding:9px 14px;border-radius:11px;
+  background:linear-gradient(160deg,#ffe08a,#ffbe3d);color:#3a2402;
+  box-shadow:0 4px 12px rgba(255,190,61,.3), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .1s, filter .15s;white-space:nowrap;
+}
+.up-buy:hover{filter:brightness(1.06);}
+.up-buy:active{transform:scale(.96);}
+.up-buy:disabled{background:rgba(255,255,255,.07);color:var(--sub);box-shadow:none;cursor:default;}
+.owned-wrap{margin-top:18px;}
+.owned-title{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:1px;margin-bottom:8px;}
+.owned-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.owned-chip{
+  font-size:11.5px;padding:5px 10px;border-radius:999px;color:#d3d9f5;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+}
+.empty-note{text-align:center;color:var(--sub);font-size:13px;padding:34px 10px;line-height:1.7;}
+
+/* ---------- 통계 / 명성 ---------- */
+.stat-list{display:flex;flex-direction:column;gap:2px;margin-bottom:16px;}
+.stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 6px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13.5px;
+}
+.stat-row .k{color:var(--sub);}
+.stat-row .v{font-weight:700;font-variant-numeric:tabular-nums;}
+.prestige-card{
+  border-radius:var(--radius);padding:18px;margin-bottom:14px;
+  background:linear-gradient(160deg, rgba(255,209,102,.1), rgba(255,120,60,.06));
+  border:1px solid rgba(255,209,102,.3);
+}
+.prestige-card h3{font-family:var(--font-title);font-size:17px;color:var(--gold);font-weight:400;
+  display:flex;align-items:center;gap:8px;}
+.prestige-card p{font-size:12.5px;color:#c9cfec;line-height:1.7;margin-top:8px;}
+.prestige-card p b{color:var(--gold);}
+.pr-btn{
+  width:100%;margin-top:14px;padding:13px;border-radius:13px;
+  font-family:var(--font-title);font-size:15.5px;letter-spacing:1px;
+  background:linear-gradient(160deg,#ffd166,#ff8c3b);color:#331c02;
+  box-shadow:0 6px 18px rgba(255,159,67,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  transition:transform .1s, filter .15s;
+}
+.pr-btn:hover{filter:brightness(1.06);}
+.pr-btn:active{transform:scale(.98);}
+.pr-btn:disabled{background:rgba(255,255,255,.08);color:var(--sub);box-shadow:none;cursor:default;}
+.danger-zone{margin-top:22px;text-align:center;}
+.danger-zone button{
+  font-size:12px;color:var(--red);opacity:.65;text-decoration:underline;
+  transition:opacity .15s;
+}
+.danger-zone button:hover{opacity:1;}
+
+/* ---------- 토스트 ---------- */
+#toasts{
+  position:fixed;top:70px;right:446px;z-index:60;display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;
+}
+.toast{
+  display:flex;align-items:center;gap:10px;min-width:220px;max-width:300px;
+  padding:11px 15px;border-radius:14px;
+  background:rgba(17,24,56,.94);border:1px solid rgba(255,209,102,.35);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  animation:toastin .3s cubic-bezier(.2,1.4,.4,1), toastout .3s ease-in forwards 3.2s;
+}
+.toast .t-icon{font-size:22px;}
+.toast .t-title{font-size:13.5px;font-weight:700;}
+.toast .t-sub{font-size:12px;color:var(--sub);margin-top:1px;}
+@keyframes toastin{0%{opacity:0;transform:translateX(30px);}100%{opacity:1;transform:none;}}
+@keyframes toastout{0%{opacity:1;}100%{opacity:0;transform:translateX(24px);}}
+
+/* ---------- 모달 ---------- */
+#overlay{
+  position:fixed;inset:0;background:rgba(4,7,20,.7);backdrop-filter:blur(5px);
+  z-index:100;display:none;align-items:center;justify-content:center;padding:20px;
+}
+#overlay.show{display:flex;}
+.modal{
+  width:min(420px, 100%);border-radius:20px;padding:26px;
+  background:linear-gradient(170deg,#171f47,#101534);
+  border:1px solid var(--line-strong);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  animation:modalin .3s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes modalin{0%{opacity:0;transform:translateY(22px) scale(.96);}100%{opacity:1;transform:none;}}
+.modal .m-icon{font-size:40px;text-align:center;}
+.modal h2{font-family:var(--font-title);font-size:20px;font-weight:400;text-align:center;margin-top:10px;color:var(--gold);}
+.modal .m-body{font-size:13.5px;color:#c9cfec;line-height:1.8;text-align:center;margin-top:12px;}
+.modal .m-body b{color:var(--gold);font-size:16px;}
+.m-btns{display:flex;gap:10px;margin-top:22px;}
+.m-btn{
+  flex:1;padding:13px;border-radius:13px;font-size:14.5px;font-weight:700;
+  transition:transform .1s, filter .15s;
+}
+.m-btn:active{transform:scale(.97);}
+.m-btn.primary{background:linear-gradient(160deg,#ffb25e,#f97316);color:#2a1502;
+  box-shadow:0 5px 16px rgba(249,115,22,.35);}
+.m-btn.primary:hover{filter:brightness(1.07);}
+.m-btn.ghost{background:rgba(255,255,255,.07);color:#cdd4f2;border:1px solid var(--line);}
+.m-btn.ghost:hover{background:rgba(255,255,255,.12);}
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 920px){
+  main{flex-direction:column;}
+  #scene{flex:0 0 44%;}
+  #panel{flex:1 1 auto;border-left:none;border-top:1px solid var(--line);}
+  #toasts{right:14px;top:64px;}
+  #cartWrap{width:min(440px, 92%);bottom:22px;}
+  #hud{top:12px;}
+  .logo .tag{display:none;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">
+      <span class="mark">🏮</span>
+      <div>
+        <h1>달빛 포장마차 타이쿤</h1>
+        <span class="tag">야심한 밤, 김이 모락모락</span>
+      </div>
+    </div>
+    <div class="head-right">
+      <span class="chip star" id="starChip" title="명성 1개당 전체 수입 +10%">★ 0</span>
+      <button class="icon-btn" id="soundBtn" title="소리 켜기/끄기">🔊</button>
+      <button class="icon-btn" id="saveBtn" title="지금 저장">💾</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== 밤 풍경 ==================== -->
+    <section id="scene" title="포장마차를 클릭해서 음식을 파세요!">
+      <div id="sky"></div>
+      <div id="moon"></div>
+      <div id="skyline">
+        <svg viewBox="0 0 1200 180" preserveAspectRatio="xMidYMax slice">
+          <path fill="#0b102c" d="M0,180 L0,120 L60,120 L60,80 L110,80 L110,130 L170,130 L170,60 L230,60 L230,110 L300,110 L300,140 L360,140 L360,90 L430,90 L430,50 L470,50 L470,120 L540,120 L540,100 L610,100 L610,140 L680,140 L680,70 L740,70 L740,110 L810,110 L810,40 L860,40 L860,90 L930,90 L930,130 L1000,130 L1000,80 L1060,80 L1060,120 L1130,120 L1130,100 L1200,100 L1200,180 Z"/>
+          <g fill="#ffd166" opacity=".5">
+            <rect x="182" y="76" width="5" height="5"/><rect x="200" y="92" width="5" height="5"/>
+            <rect x="440" y="64" width="5" height="5"/><rect x="448" y="80" width="5" height="5"/>
+            <rect x="694" y="84" width="5" height="5"/><rect x="712" y="100" width="5" height="5"/>
+            <rect x="822" y="56" width="5" height="5"/><rect x="840" y="72" width="5" height="5"/>
+            <rect x="1012" y="94" width="5" height="5"/><rect x="242" y="76" width="5" height="5"/>
+          </g>
+        </svg>
+      </div>
+      <div id="ground"></div>
+      <div class="light-pool"></div>
+      <div id="frenzyTint"></div>
+
+      <!-- HUD -->
+      <div id="hud">
+        <div id="money">0원</div>
+        <div class="hud-chips">
+          <span class="hud-chip">초당 <b id="persec">0원</b></span>
+          <span class="hud-chip">클릭당 <b id="clickpow">100원</b></span>
+        </div>
+        <div id="frenzyBadge">🔥 만복 시간 ×7 — <span id="frenzyLeft">30</span>초</div>
+      </div>
+      <div id="hint">포장마차를 클릭해서 장사를 시작하세요!</div>
+
+      <!-- 포장마차 -->
+      <div id="cartWrap">
+        <svg viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#a9714a"/><stop offset="1" stop-color="#84512f"/>
+            </linearGradient>
+            <radialGradient id="warmglow" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#ff9d45" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#ff9d45" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="lant" cx=".38" cy=".3" r=".8">
+              <stop offset="0" stop-color="#ffb98a"/><stop offset=".55" stop-color="#ff6b45"/>
+              <stop offset="1" stop-color="#d63f28"/>
+            </radialGradient>
+            <clipPath id="awnclip">
+              <path d="M30 118 L30 78 Q30 60 48 60 L412 60 Q430 60 430 78 L430 118 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 Z"/>
+            </clipPath>
+          </defs>
+
+          <!-- 따뜻한 불빛 -->
+          <ellipse cx="230" cy="205" rx="205" ry="105" fill="url(#warmglow)"/>
+
+          <!-- 바퀴 -->
+          <g stroke="#17100a" stroke-width="6" fill="#2c2016">
+            <circle cx="135" cy="298" r="26"/><circle cx="330" cy="298" r="26"/>
+          </g>
+          <g stroke="#b98d5c" stroke-width="3">
+            <line x1="135" y1="278" x2="135" y2="318"/><line x1="115" y1="298" x2="155" y2="298"/>
+            <line x1="330" y1="278" x2="330" y2="318"/><line x1="310" y1="298" x2="350" y2="298"/>
+          </g>
+          <circle cx="135" cy="298" r="7" fill="#b98d5c"/><circle cx="330" cy="298" r="7" fill="#b98d5c"/>
+
+          <!-- 몸체 -->
+          <rect x="70" y="195" width="320" height="92" rx="10" fill="url(#wood)" stroke="#59371f" stroke-width="3"/>
+          <line x1="76" y1="226" x2="384" y2="226" stroke="#7c4c2c" stroke-width="2"/>
+          <line x1="76" y1="256" x2="384" y2="256" stroke="#7c4c2c" stroke-width="2"/>
+          <!-- 메뉴판 -->
+          <rect x="92" y="207" width="92" height="66" rx="6" fill="#f5ead1" stroke="#d8c8a8" stroke-width="2"/>
+          <text x="138" y="228" font-size="14" fill="#b3402f" text-anchor="middle" font-weight="bold">어 묵</text>
+          <text x="138" y="248" font-size="14" fill="#4a3520" text-anchor="middle" font-weight="bold">떡볶이</text>
+          <text x="138" y="267" font-size="14" fill="#4a3520" text-anchor="middle" font-weight="bold">붕어빵</text>
+
+          <!-- 소주 궤짝 -->
+          <g transform="translate(432,252)">
+            <rect x="0" y="0" width="56" height="32" rx="4" fill="#2e7d4f" stroke="#1d5233" stroke-width="2.5"/>
+            <line x1="14" y1="0" x2="14" y2="32" stroke="#1d5233" stroke-width="2"/>
+            <line x1="28" y1="0" x2="28" y2="32" stroke="#1d5233" stroke-width="2"/>
+            <line x1="42" y1="0" x2="42" y2="32" stroke="#1d5233" stroke-width="2"/>
+            <rect x="4" y="38" width="56" height="32" rx="4" fill="#2e7d4f" stroke="#1d5233" stroke-width="2.5"/>
+            <line x1="18" y1="38" x2="18" y2="70" stroke="#1d5233" stroke-width="2"/>
+            <line x1="32" y1="38" x2="32" y2="70" stroke="#1d5233" stroke-width="2"/>
+            <line x1="46" y1="38" x2="46" y2="70" stroke="#1d5233" stroke-width="2"/>
+          </g>
+
+          <!-- 조리대 -->
+          <rect x="58" y="178" width="344" height="20" rx="9" fill="#c98a5b" stroke="#59371f" stroke-width="3"/>
+          <!-- 기둥 -->
+          <rect x="76" y="70" width="10" height="110" fill="#6e4326"/>
+          <rect x="374" y="70" width="10" height="110" fill="#6e4326"/>
+
+          <!-- 어묵 꼬치 통 -->
+          <g>
+            <line x1="126" y1="154" x2="122" y2="132" stroke="#e8d9b0" stroke-width="2.5"/>
+            <line x1="135" y1="154" x2="135" y2="128" stroke="#e8d9b0" stroke-width="2.5"/>
+            <line x1="144" y1="154" x2="148" y2="132" stroke="#e8d9b0" stroke-width="2.5"/>
+            <ellipse cx="122" cy="130" rx="5" ry="8" fill="#d9a45f" transform="rotate(-10 122 130)"/>
+            <ellipse cx="135" cy="126" rx="5" ry="8" fill="#d9a45f"/>
+            <ellipse cx="148" cy="130" rx="5" ry="8" fill="#d9a45f" transform="rotate(10 148 130)"/>
+            <rect x="116" y="152" width="38" height="26" rx="4" fill="#b8402f" stroke="#7e2417" stroke-width="2.5"/>
+          </g>
+
+          <!-- 국물 솥 (김 나는 위치) -->
+          <g>
+            <rect x="292" y="150" width="58" height="28" rx="5" fill="#d7dde9" stroke="#7f8aa3" stroke-width="2.5"/>
+            <rect x="286" y="158" width="8" height="6" rx="2" fill="#7f8aa3"/>
+            <rect x="348" y="158" width="8" height="6" rx="2" fill="#7f8aa3"/>
+            <line x1="298" y1="150" x2="344" y2="150" stroke="#aab3c8" stroke-width="3"/>
+          </g>
+
+          <!-- 차양 -->
+          <g clip-path="url(#awnclip)">
+            <rect x="30" y="55" width="400" height="85" fill="#f7ead6"/>
+            <rect x="30" y="55" width="50" height="85" fill="#ff8c3b"/>
+            <rect x="130" y="55" width="50" height="85" fill="#ff8c3b"/>
+            <rect x="230" y="55" width="50" height="85" fill="#ff8c3b"/>
+            <rect x="330" y="55" width="50" height="85" fill="#ff8c3b"/>
+          </g>
+          <path d="M30 118 L30 78 Q30 60 48 60 L412 60 Q430 60 430 78 L430 118 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 a 25 16 0 0 1 -50 0 Z"
+                fill="none" stroke="#b35f1f" stroke-width="3.5"/>
+
+          <!-- 간판 -->
+          <line x1="205" y1="122" x2="200" y2="148" stroke="#caa06a" stroke-width="2.5"/>
+          <line x1="255" y1="122" x2="260" y2="148" stroke="#caa06a" stroke-width="2.5"/>
+          <rect x="187" y="148" width="86" height="36" rx="7" fill="#241812" stroke="#caa06a" stroke-width="2.5"/>
+          <text x="230" y="172" font-size="18" fill="#ffd166" text-anchor="middle"
+                font-family="Jua, 'Noto Sans KR', sans-serif" letter-spacing="2">달빛포차</text>
+
+          <!-- 홍등 -->
+          <g class="lantern-glow">
+            <line x1="58" y1="112" x2="58" y2="132" stroke="#caa06a" stroke-width="2.5"/>
+            <rect x="51" y="130" width="14" height="6" rx="2" fill="#8c2f1d"/>
+            <ellipse cx="58" cy="150" rx="14" ry="17" fill="url(#lant)"/>
+            <path d="M50 140 Q58 136 66 140 M48 150 Q58 146 68 150 M50 160 Q58 157 66 160" stroke="rgba(0,0,0,.18)" stroke-width="1.5" fill="none"/>
+            <rect x="52" y="164" width="12" height="5" rx="2" fill="#8c2f1d"/>
+            <line x1="58" y1="169" x2="58" y2="177" stroke="#ffd166" stroke-width="2"/>
+          </g>
+          <g class="lantern-glow l2">
+            <line x1="402" y1="112" x2="402" y2="132" stroke="#caa06a" stroke-width="2.5"/>
+            <rect x="395" y="130" width="14" height="6" rx="2" fill="#8c2f1d"/>
+            <ellipse cx="402" cy="150" rx="14" ry="17" fill="url(#lant)"/>
+            <path d="M394 140 Q402 136 410 140 M392 150 Q402 146 412 150 M394 160 Q402 157 410 160" stroke="rgba(0,0,0,.18)" stroke-width="1.5" fill="none"/>
+            <rect x="396" y="164" width="12" height="5" rx="2" fill="#8c2f1d"/>
+            <line x1="402" y1="169" x2="402" y2="177" stroke="#ffd166" stroke-width="2"/>
+          </g>
+        </svg>
+        <div id="steamAnchor"></div>
+      </div>
+
+      <!-- 만복 고양이 -->
+      <button id="cat" title="만복 고양이!">🐱</button>
+    </section>
+
+    <!-- ==================== 우측 패널 ==================== -->
+    <aside id="panel">
+      <nav id="tabs">
+        <button class="tab active" data-tab="menu">메뉴<span class="badge"></span></button>
+        <button class="tab" data-tab="up">업그레이드<span class="badge"></span></button>
+        <button class="tab" data-tab="stats">통계 · 명성<span class="badge"></span></button>
+      </nav>
+
+      <section class="tabpane active" id="tab-menu">
+        <div class="pane-head">
+          <span class="ttl">포장마차 메뉴</span>
+          <div id="buyModes">
+            <button class="bm active" data-mode="1">×1</button>
+            <button class="bm" data-mode="10">×10</button>
+            <button class="bm" data-mode="max">MAX</button>
+          </div>
+        </div>
+        <div class="pane-scroll" id="menuList"></div>
+      </section>
+
+      <section class="tabpane" id="tab-up">
+        <div class="pane-head"><span class="ttl">가게 업그레이드</span></div>
+        <div class="pane-scroll" id="upScroll">
+          <div id="upList"></div>
+          <div class="owned-wrap" id="ownedWrap" style="display:none">
+            <div class="owned-title" id="ownedTitle">적용 중</div>
+            <div class="owned-chips" id="ownedChips"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tabpane" id="tab-stats">
+        <div class="pane-head"><span class="ttl">장사 통계</span></div>
+        <div class="pane-scroll">
+          <div class="prestige-card">
+            <h3>⭐ 입소문 명성</h3>
+            <p>
+              보유 명성 <b id="prStars">★ 0</b> (전체 수입 <b id="prBonus">+0%</b>)<br>
+              지금 새로 시작하면 <b id="prGain">★ 0</b> 획득<br>
+              <span id="prNext" style="color:var(--sub)"></span>
+            </p>
+            <p style="color:var(--sub);font-size:11.5px;">
+              명성 1개당 전체 수입이 영구히 +10% 됩니다.<br>
+              새로 시작하면 돈·메뉴·업그레이드는 초기화됩니다.
+            </p>
+            <button class="pr-btn" id="prBtn" disabled>입소문 내고 새로 시작</button>
+          </div>
+          <div class="stat-list">
+            <div class="stat-row"><span class="k">이번 장사 수입</span><span class="v" id="stRun">0원</span></div>
+            <div class="stat-row"><span class="k">누적 총수입</span><span class="v" id="stTotal">0원</span></div>
+            <div class="stat-row"><span class="k">총 클릭 횟수</span><span class="v" id="stClicks">0회</span></div>
+            <div class="stat-row"><span class="k">만복 고양이 조우</span><span class="v" id="stCat">0회</span></div>
+            <div class="stat-row"><span class="k">총 플레이 시간</span><span class="v" id="stTime">0초</span></div>
+          </div>
+          <div class="danger-zone">
+            <button id="wipeBtn">저장 데이터 전체 삭제</button>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<div id="toasts"></div>
+<div id="overlay"><div class="modal" id="modalCard"></div></div>
+
+<script>
+'use strict';
+/* ============================================================
+   달빛 포장마차 타이쿤 — 게임 로직
+   ============================================================ */
+
+// ---------- 데이터 정의 ----------
+const ITEMS = [
+  {id:'eomuk',   emoji:'🍢', name:'어묵 꼬치',     desc:'뜨끈한 국물은 서비스',        cost:1500,   inc:10},
+  {id:'bung',    emoji:'🐟', name:'붕어빵',        desc:'꼬리까지 팥이 꽉',            cost:11000,  inc:100},
+  {id:'tteok',   emoji:'🌶️', name:'떡볶이',        desc:'달콤매콤 비법 소스',          cost:120000, inc:850},
+  {id:'hotteok', emoji:'🥞', name:'호떡',          desc:'설탕이 주르륵',               cost:1.4e6,  inc:5200},
+  {id:'goguma',  emoji:'🍠', name:'군고구마',      desc:'장작불 향 가득',              cost:1.6e7,  inc:29000},
+  {id:'twigim',  emoji:'🍤', name:'튀김 모둠',     desc:'떡볶이 국물 찍먹 필수',       cost:2e8,    inc:170000},
+  {id:'gyeran',  emoji:'🥚', name:'계란빵',        desc:'따끈따끈 겨울 간식',          cost:2.6e9,  inc:1.0e6},
+  {id:'dak',     emoji:'🍗', name:'닭꼬치',        desc:'숯불 직화의 풍미',            cost:3.5e10, inc:6.5e6},
+  {id:'ramyeon', emoji:'🍜', name:'라면',          desc:'한강 스타일 즉석 라면',       cost:5.0e11, inc:4.3e7},
+  {id:'pajeon',  emoji:'🍶', name:'파전 & 막걸리', desc:'비 오는 날의 완성',           cost:7.7e12, inc:2.9e8},
+];
+const COST_R = 1.15;
+const MILESTONES = [25, 50, 100, 150, 200, 250, 300];
+
+const ITEM_UP_NAMES = {
+  eomuk:['진한 육수','국물 무한 리필'],
+  bung:['팥 두 배','슈크림 신메뉴'],
+  tteok:['비법 고추장','로제 떡볶이'],
+  hotteok:['씨앗 호떡','꿀 폭포'],
+  goguma:['화덕 업그레이드','꿀고구마 품종'],
+  twigim:['바삭 반죽 비율','새우 두 마리'],
+  gyeran:['치즈 토핑','더블 에그'],
+  dak:['숯불 직화','특제 매운 양념'],
+  ramyeon:['계란 + 치즈','라면 끓이기 장인'],
+  pajeon:['바삭한 가장자리','동동주 세트'],
+};
+
+const UPGRADES = [];
+// 클릭 업그레이드
+UPGRADES.push(
+  {id:'c1', icon:'🥢', name:'나무젓가락',  desc:'클릭 수입 2배', cost:6000,    type:'click', mult:2, unlock:s=>s.clicks>=15},
+  {id:'c2', icon:'🧤', name:'위생 장갑',   desc:'클릭 수입 2배', cost:120000,  type:'click', mult:2, unlock:s=>!!s.upgrades.c1},
+  {id:'c3', icon:'🥄', name:'특제 국자',   desc:'클릭 수입 2배', cost:6e6,     type:'click', mult:2, unlock:s=>!!s.upgrades.c2},
+  {id:'c4', icon:'🌙', name:'달빛의 손길', desc:'클릭할 때 초당 수입의 1%를 추가로 획득', cost:8e8, type:'clicksyn', pct:.01, unlock:s=>!!s.upgrades.c3},
+  {id:'c5', icon:'⚡', name:'번개 손놀림', desc:'클릭 수입 2배 + 초당 수입의 2% 추가',    cost:1.2e11, type:'clickboth', mult:2, pct:.02, unlock:s=>!!s.upgrades.c4},
+);
+// 메뉴별 업그레이드 (Lv10 / Lv50 해금)
+ITEMS.forEach(it=>{
+  const [n1, n2] = ITEM_UP_NAMES[it.id];
+  UPGRADES.push({
+    id:it.id+'_u1', icon:it.emoji, name:n1, desc:`${it.name} 수입 2배`,
+    cost:it.cost*90, type:'item', target:it.id,
+    unlock:s=>(s.items[it.id]||0)>=10,
+  });
+  UPGRADES.push({
+    id:it.id+'_u2', icon:it.emoji, name:n2, desc:`${it.name} 수입 2배`,
+    cost:it.cost*1100, type:'item', target:it.id,
+    unlock:s=>(s.items[it.id]||0)>=50,
+  });
+});
+// 전체 업그레이드
+UPGRADES.push(
+  {id:'g1', icon:'🪧', name:'입간판 설치',        desc:'전체 수입 +25%', cost:3e5,   type:'global', mult:1.25, unlock:s=>s.totalEarned>=1e5},
+  {id:'g2', icon:'📻', name:'트로트 라디오',      desc:'전체 수입 +25%', cost:2.5e7, type:'global', mult:1.25, unlock:s=>s.totalEarned>=1e7},
+  {id:'g3', icon:'📒', name:'단골 장부',          desc:'전체 수입 +50%', cost:4e9,   type:'global', mult:1.5,  unlock:s=>s.totalEarned>=1e9},
+  {id:'g4', icon:'🏮', name:'야시장 명물 선정',   desc:'전체 수입 +50%', cost:6e11,  type:'global', mult:1.5,  unlock:s=>s.totalEarned>=1e11},
+  {id:'g5', icon:'📺', name:'전국 맛집 방송 출연',desc:'전체 수입 2배',  cost:9e13,  type:'global', mult:2,    unlock:s=>s.totalEarned>=1e13},
+  {id:'cat1', icon:'🐟', name:'고양이 간식', desc:'만복 고양이가 2배 자주 찾아옵니다', cost:2e9, type:'special', unlock:s=>s.catClicks>=3},
+);
+
+// ---------- 상태 ----------
+const SAVE_KEY = 'moonpocha_save_v1';
+let state = defaultState();
+function defaultState(){
+  return {
+    money:0, totalEarned:0, runEarned:0,
+    clicks:0, catClicks:0, playTime:0,
+    stars:0,
+    items:{}, upgrades:{},
+    frenzyUntil:0,
+    sound:true, buyMode:'1',
+    lastTs:Date.now(),
+  };
+}
+
+// ---------- 숫자 포맷 ----------
+const UNITS = [[1e20,'해'],[1e16,'경'],[1e12,'조'],[1e8,'억'],[1e4,'만']];
+function fmt(n){
+  if(!isFinite(n)) return '∞';
+  if(n < 0) return '-'+fmt(-n);
+  if(n < 1e4) return Math.floor(n).toLocaleString('ko-KR');
+  for(const [v,u] of UNITS){
+    if(n >= v){
+      const q = n/v;
+      if(q >= 100) return Math.floor(q).toLocaleString('ko-KR')+u;
+      const s = (q >= 10 ? q.toFixed(1) : q.toFixed(2)).replace(/\.?0+$/,'');
+      return s+u;
+    }
+  }
+  return Math.floor(n).toLocaleString('ko-KR');
+}
+function fmtWon(n){ return fmt(n)+'원'; }
+function fmtTime(sec){
+  sec = Math.floor(sec);
+  if(sec < 60) return sec+'초';
+  const m = Math.floor(sec/60), s = sec%60;
+  if(m < 60) return m+'분 '+s+'초';
+  const h = Math.floor(m/60);
+  return h+'시간 '+(m%60)+'분';
+}
+
+// ---------- 수입 계산 ----------
+function itemMult(id){
+  let m = 1;
+  const c = state.items[id]||0;
+  for(const t of MILESTONES) if(c >= t) m *= 2;
+  for(const u of UPGRADES)
+    if(u.type==='item' && u.target===id && state.upgrades[u.id]) m *= 2;
+  return m;
+}
+function isFrenzy(){ return Date.now() < state.frenzyUntil; }
+function globalMult(){
+  let m = 1;
+  for(const u of UPGRADES)
+    if(u.type==='global' && state.upgrades[u.id]) m *= u.mult;
+  m *= 1 + state.stars*0.1;
+  if(isFrenzy()) m *= 7;
+  return m;
+}
+function perSec(){
+  let s = 0;
+  for(const it of ITEMS) s += it.inc * (state.items[it.id]||0) * itemMult(it.id);
+  return s * globalMult();
+}
+function itemPerSec(it){
+  return it.inc * (state.items[it.id]||0) * itemMult(it.id) * globalMult();
+}
+function clickPower(psCached){
+  let base = 100;
+  let syn = 0;
+  for(const u of UPGRADES){
+    if(!state.upgrades[u.id]) continue;
+    if(u.type==='click' || u.type==='clickboth') base *= (u.mult||1);
+    if(u.type==='clicksyn' || u.type==='clickboth') syn += (u.pct||0);
+  }
+  base *= 1 + state.stars*0.1;
+  if(isFrenzy()) base *= 7;
+  const ps = (psCached !== undefined) ? psCached : perSec();
+  return base + ps*syn;
+}
+
+// ---------- 비용 계산 ----------
+function itemCost(it, n){
+  const c = state.items[it.id]||0;
+  return it.cost * Math.pow(COST_R, c) * (Math.pow(COST_R, n)-1) / (COST_R-1);
+}
+function maxAffordable(it){
+  const c = state.items[it.id]||0;
+  const cur = it.cost * Math.pow(COST_R, c);
+  if(state.money < cur) return 0;
+  return Math.floor(Math.log(state.money*(COST_R-1)/cur + 1) / Math.log(COST_R));
+}
+
+// ---------- 돈 ----------
+function addMoney(v){
+  state.money += v;
+  state.totalEarned += v;
+  state.runEarned += v;
+}
+
+// ---------- 사운드 ----------
+let audioCtx = null;
+function beep(freq, dur, vol, slide, type){
+  if(!state.sound) return;
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type||'triangle';
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.linearRampToValueAtTime(Math.max(40, freq+(slide||0)), t+dur);
+    g.gain.setValueAtTime(vol||0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t+dur);
+  }catch(e){/* 오디오 미지원 환경 무시 */}
+}
+const sfx = {
+  click(){ beep(640, .05, .08, -260); },
+  buy(){ beep(420, .07, .1, 120); setTimeout(()=>beep(640, .07, .1, 140), 60); },
+  upgrade(){ beep(520, .09, .11, 0); setTimeout(()=>beep(660, .09, .11, 0), 80); setTimeout(()=>beep(880, .12, .11, 0), 160); },
+  cat(){ beep(880, .08, .12, 240); setTimeout(()=>beep(1180, .12, .12, 260), 90); },
+};
+
+// ---------- DOM 캐시 ----------
+const $ = id => document.getElementById(id);
+const el = {
+  scene:$('scene'), sky:$('sky'), cartWrap:$('cartWrap'), steamAnchor:$('steamAnchor'),
+  money:$('money'), persec:$('persec'), clickpow:$('clickpow'),
+  frenzyBadge:$('frenzyBadge'), frenzyLeft:$('frenzyLeft'), hint:$('hint'),
+  starChip:$('starChip'), soundBtn:$('soundBtn'), saveBtn:$('saveBtn'),
+  menuList:$('menuList'), upList:$('upList'),
+  ownedWrap:$('ownedWrap'), ownedTitle:$('ownedTitle'), ownedChips:$('ownedChips'),
+  toasts:$('toasts'), overlay:$('overlay'), modalCard:$('modalCard'),
+  cat:$('cat'),
+  prStars:$('prStars'), prBonus:$('prBonus'), prGain:$('prGain'), prNext:$('prNext'), prBtn:$('prBtn'),
+  stRun:$('stRun'), stTotal:$('stTotal'), stClicks:$('stClicks'), stCat:$('stCat'), stTime:$('stTime'),
+};
+
+// ---------- 별 하늘 ----------
+(function makeStars(){
+  const frag = document.createDocumentFragment();
+  for(let i=0;i<75;i++){
+    const s = document.createElement('span');
+    s.className = 'star';
+    const size = 1 + Math.random()*1.8;
+    s.style.width = s.style.height = size.toFixed(1)+'px';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*62)+'%';
+    s.style.animationDelay = (Math.random()*3.2)+'s';
+    s.style.animationDuration = (2.2+Math.random()*3)+'s';
+    frag.appendChild(s);
+  }
+  el.sky.appendChild(frag);
+})();
+function shootStar(){
+  const s = document.createElement('span');
+  s.className = 'shoot';
+  s.style.left = (30+Math.random()*60)+'%';
+  s.style.top = (5+Math.random()*30)+'%';
+  el.sky.appendChild(s);
+  setTimeout(()=>s.remove(), 1500);
+}
+setInterval(()=>{ if(Math.random()<0.5) shootStar(); }, 16000);
+
+// ---------- 김(스팀) ----------
+setInterval(()=>{
+  if(document.hidden) return;
+  const s = document.createElement('span');
+  s.className = 'steam';
+  s.style.left = (-8 + Math.random()*20 - 10)+'px';
+  s.style.top = (Math.random()*6 - 3)+'px';
+  s.style.setProperty('--drift', (Math.random()*26-13).toFixed(0)+'px');
+  el.steamAnchor.appendChild(s);
+  setTimeout(()=>s.remove(), 2500);
+}, 520);
+
+// ---------- 플로팅 텍스트 ----------
+function floatText(x, y, text){
+  const f = document.createElement('span');
+  f.className = 'float-txt';
+  f.textContent = text;
+  f.style.left = x+'px';
+  f.style.top = y+'px';
+  el.scene.appendChild(f);
+  setTimeout(()=>f.remove(), 1050);
+}
+
+// ---------- 손님 ----------
+const CUSTOMER_EMOJI = ['🧑','👩','👨','🧓','👵','🧑‍💼','👩‍🎤','🧑‍🎓','👷','🧕'];
+let customerCount = 0;
+function spawnCustomer(){
+  if(customerCount >= 5 || document.hidden) return;
+  if(perSec() <= 0 && state.clicks < 5) return;
+  customerCount++;
+  const c = document.createElement('span');
+  c.className = 'customer';
+  c.textContent = CUSTOMER_EMOJI[Math.floor(Math.random()*CUSTOMER_EMOJI.length)];
+  const fromLeft = Math.random() < 0.5;
+  c.style.left = fromLeft ? '-40px' : 'calc(100% + 40px)';
+  el.scene.appendChild(c);
+  const sceneW = el.scene.clientWidth;
+  const target = sceneW/2 + (fromLeft ? -1 : 1) * (sceneW*0.18 + Math.random()*sceneW*0.1);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ c.style.left = target+'px'; }));
+  setTimeout(()=>c.classList.add('bob'), 7000);
+  const stay = 4000 + Math.random()*5000;
+  setTimeout(()=>{
+    c.classList.remove('bob');
+    c.style.left = fromLeft ? '-60px' : 'calc(100% + 60px)';
+    setTimeout(()=>{ c.remove(); customerCount--; }, 7200);
+  }, 7000 + stay);
+}
+function scheduleCustomer(){
+  setTimeout(()=>{ spawnCustomer(); scheduleCustomer(); }, 5000 + Math.random()*9000);
+}
+scheduleCustomer();
+
+// ---------- 만복 고양이 ----------
+let nextCatAt = Date.now() + 60e3 + Math.random()*120e3;
+let catVisible = false;
+function catInterval(){
+  const base = 90e3 + Math.random()*150e3;
+  return state.upgrades.cat1 ? base/2 : base;
+}
+function showCat(){
+  catVisible = true;
+  el.cat.style.left = (8 + Math.random()*72)+'%';
+  el.cat.style.top = (26 + Math.random()*36)+'%';
+  el.cat.classList.add('show');
+  setTimeout(()=>{
+    if(catVisible){ hideCat(); nextCatAt = Date.now() + catInterval(); }
+  }, 12000);
+}
+function hideCat(){
+  catVisible = false;
+  el.cat.classList.remove('show');
+}
+el.cat.addEventListener('click', e=>{
+  e.stopPropagation();
+  if(!catVisible) return;
+  hideCat();
+  nextCatAt = Date.now() + catInterval();
+  state.catClicks++;
+  sfx.cat();
+  const ps = perSec();
+  if(Math.random() < 0.5){
+    const gain = Math.max(clickPower(ps)*25, ps*90);
+    addMoney(gain);
+    toast('🧧','복주머니 발견!','+'+fmtWon(gain));
+  }else{
+    state.frenzyUntil = Date.now() + 30e3;
+    toast('🔥','만복 시간!','30초 동안 모든 수입 ×7');
+  }
+  renderUpgrades(true);
+});
+
+// ---------- 클릭(장사) ----------
+el.scene.addEventListener('click', e=>{
+  if(e.target.closest('#cat')) return;
+  const power = clickPower();
+  addMoney(power);
+  state.clicks++;
+  sfx.click();
+  el.cartWrap.classList.remove('bounce');
+  void el.cartWrap.offsetWidth; // 애니메이션 재시작
+  el.cartWrap.classList.add('bounce');
+  const rect = el.scene.getBoundingClientRect();
+  floatText(
+    e.clientX - rect.left + (Math.random()*30-15),
+    e.clientY - rect.top - 14,
+    '+'+fmtWon(power)
+  );
+  if(state.clicks >= 20) el.hint.style.display = 'none';
+});
+
+// ---------- 메뉴 렌더링 ----------
+const menuDom = {}; // id -> {card, lv, sub, bar, btn, btnN, btnCost}
+function visibleItemIds(){
+  const out = [];
+  let teaserShown = false;
+  for(let i=0;i<ITEMS.length;i++){
+    const it = ITEMS[i];
+    const owned = (state.items[it.id]||0) > 0;
+    const prevOwned = i===0 || (state.items[ITEMS[i-1].id]||0) > 0;
+    if(owned || prevOwned){ out.push({id:it.id, locked:false}); }
+    else if(!teaserShown){ out.push({id:it.id, locked:true}); teaserShown = true; }
+    else break;
+  }
+  return out;
+}
+let menuKey = '';
+function renderMenu(){
+  const vis = visibleItemIds();
+  const key = vis.map(v=>v.id+(v.locked?'L':'')).join(',');
+  if(key === menuKey){ updateMenuTexts(); return; }
+  menuKey = key;
+  el.menuList.innerHTML = '';
+  for(const k in menuDom) delete menuDom[k];
+  for(const v of vis){
+    const it = ITEMS.find(x=>x.id===v.id);
+    const card = document.createElement('div');
+    card.className = 'item-card'+(v.locked?' locked':'');
+    card.innerHTML =
+      '<div class="item-emoji">'+(v.locked?'❔':it.emoji)+'</div>'+
+      '<div class="item-info">'+
+        '<div class="item-top"><span class="item-name">'+(v.locked?'???':it.name)+'</span>'+
+        '<span class="item-lv"></span></div>'+
+        '<div class="item-sub"></div>'+
+        '<div class="ms-bar"><i></i></div>'+
+      '</div>'+
+      '<button class="buy-btn"><span class="buy-n"></span><span class="buy-cost"></span></button>';
+    const btn = card.querySelector('.buy-btn');
+    if(!v.locked){
+      btn.addEventListener('click', ()=>buyItem(it));
+    }else{
+      btn.disabled = true;
+    }
+    el.menuList.appendChild(card);
+    menuDom[it.id] = {
+      locked:v.locked, card,
+      lv:card.querySelector('.item-lv'),
+      sub:card.querySelector('.item-sub'),
+      bar:card.querySelector('.ms-bar i'),
+      btn,
+      btnN:card.querySelector('.buy-n'),
+      btnCost:card.querySelector('.buy-cost'),
+    };
+  }
+  updateMenuTexts();
+}
+function updateMenuTexts(){
+  for(const it of ITEMS){
+    const d = menuDom[it.id];
+    if(!d) continue;
+    const c = state.items[it.id]||0;
+    if(d.locked){
+      d.lv.textContent = '';
+      d.sub.textContent = fmtWon(it.cost)+'부터 판매 가능';
+      d.btnN.textContent = '잠김';
+      d.btnCost.textContent = '🔒';
+      d.bar.style.width = '0%';
+      continue;
+    }
+    d.lv.textContent = 'Lv.'+c;
+    if(c > 0){
+      d.sub.innerHTML = '초당 <b>'+fmtWon(itemPerSec(it))+'</b> · '+it.desc;
+    }else{
+      d.sub.textContent = it.desc;
+    }
+    const next = MILESTONES.find(t=>t>c);
+    d.bar.style.width = next ? Math.min(100, c/next*100)+'%' : '100%';
+  }
+  updateMenuButtons();
+}
+function updateMenuButtons(){
+  for(const it of ITEMS){
+    const d = menuDom[it.id];
+    if(!d || d.locked) continue;
+    let n, label;
+    if(state.buyMode === 'max'){
+      n = Math.max(1, maxAffordable(it));
+      label = 'MAX ×'+n;
+    }else{
+      n = parseInt(state.buyMode, 10);
+      label = '×'+n;
+    }
+    const cost = itemCost(it, n);
+    const ok = state.money >= cost;
+    d.btnN.textContent = label;
+    d.btnCost.textContent = fmtWon(cost);
+    d.btn.disabled = !ok;
+  }
+}
+function buyItem(it){
+  let n;
+  if(state.buyMode === 'max') n = Math.max(1, maxAffordable(it));
+  else n = parseInt(state.buyMode, 10);
+  const cost = itemCost(it, n);
+  if(state.money < cost) return;
+  const before = state.items[it.id]||0;
+  state.money -= cost;
+  state.items[it.id] = before + n;
+  sfx.buy();
+  for(const t of MILESTONES){
+    if(before < t && state.items[it.id] >= t){
+      toast(it.emoji, it.name+' Lv.'+t+' 달성!', '해당 메뉴 수입 2배');
+      sfx.upgrade();
+    }
+  }
+  renderMenu();
+  renderUpgrades(true);
+  updateHUD();
+}
+
+// ---------- 업그레이드 렌더링 ----------
+let upKey = '';
+function availableUpgrades(){
+  return UPGRADES
+    .filter(u=>!state.upgrades[u.id] && u.unlock(state))
+    .sort((a,b)=>a.cost-b.cost);
+}
+function renderUpgrades(force){
+  const avail = availableUpgrades();
+  const key = avail.map(u=>u.id).join(',');
+  if(!force && key === upKey){ updateUpgradeButtons(); return; }
+  upKey = key;
+  el.upList.innerHTML = '';
+  if(avail.length === 0){
+    el.upList.innerHTML = '<div class="empty-note">지금 살 수 있는 업그레이드가 없습니다.<br>메뉴 레벨을 올리거나 장사를 계속해 보세요!</div>';
+  }
+  for(const u of avail){
+    const card = document.createElement('div');
+    card.className = 'up-card';
+    card.innerHTML =
+      '<div class="up-icon">'+u.icon+'</div>'+
+      '<div><div class="up-name">'+u.name+'</div><div class="up-desc">'+u.desc+'</div></div>'+
+      '<button class="up-buy">'+fmtWon(u.cost)+'</button>';
+    const btn = card.querySelector('.up-buy');
+    btn.dataset.uid = u.id;
+    btn.addEventListener('click', ()=>buyUpgrade(u));
+    el.upList.appendChild(card);
+  }
+  // 보유 목록
+  const owned = UPGRADES.filter(u=>state.upgrades[u.id]);
+  if(owned.length > 0){
+    el.ownedWrap.style.display = '';
+    el.ownedTitle.textContent = '적용 중 · '+owned.length+'개';
+    el.ownedChips.innerHTML = owned.map(u=>'<span class="owned-chip">'+u.icon+' '+u.name+'</span>').join('');
+  }else{
+    el.ownedWrap.style.display = 'none';
+  }
+  updateUpgradeButtons();
+}
+function updateUpgradeButtons(){
+  const btns = el.upList.querySelectorAll('.up-buy');
+  btns.forEach(btn=>{
+    const u = UPGRADES.find(x=>x.id===btn.dataset.uid);
+    if(u) btn.disabled = state.money < u.cost;
+  });
+  // 업그레이드 탭 알림 점
+  const anyAffordable = availableUpgrades().some(u=>state.money >= u.cost);
+  document.querySelector('.tab[data-tab="up"]').classList.toggle('has-new', anyAffordable);
+}
+function buyUpgrade(u){
+  if(state.money < u.cost || state.upgrades[u.id]) return;
+  state.money -= u.cost;
+  state.upgrades[u.id] = true;
+  sfx.upgrade();
+  toast(u.icon, u.name+' 구매!', u.desc);
+  renderUpgrades(true);
+  renderMenu();
+  updateHUD();
+}
+
+// ---------- 명성 (입소문) ----------
+function potentialStars(){
+  return Math.floor(3 * Math.sqrt(state.runEarned / 1e10));
+}
+function nextStarRequirement(){
+  const k = potentialStars();
+  return Math.pow((k+1)/3, 2) * 1e10;
+}
+function updatePrestige(){
+  const pot = potentialStars();
+  el.prStars.textContent = '★ '+state.stars;
+  el.prBonus.textContent = '+'+(state.stars*10)+'%';
+  el.prGain.textContent = '★ '+pot;
+  el.prNext.textContent = '다음 ★까지 이번 장사 수입 '+fmtWon(nextStarRequirement())+' 필요';
+  el.prBtn.disabled = pot <= 0;
+}
+el.prBtn.addEventListener('click', ()=>{
+  const pot = potentialStars();
+  if(pot <= 0) return;
+  showModal({
+    icon:'⭐', title:'입소문을 낼까요?',
+    body:'명성 <b>★ '+pot+'</b>을 얻고 처음부터 다시 시작합니다.<br>'+
+         '돈 · 메뉴 · 업그레이드가 초기화되고,<br>전체 수입 보너스 <b>+'+((state.stars+pot)*10)+'%</b>가 적용됩니다.',
+    buttons:[
+      {label:'그만두기', ghost:true},
+      {label:'★ '+pot+' 받고 새 출발', primary:true, fn(){
+        state.stars += pot;
+        state.money = 0;
+        state.runEarned = 0;
+        state.items = {};
+        state.upgrades = {};
+        state.frenzyUntil = 0;
+        menuKey = ''; upKey = '';
+        renderMenu(); renderUpgrades(true); updateHUD(); updatePrestige();
+        save();
+        toast('⭐','입소문이 퍼졌습니다!','명성 ★'+pot+' 획득 · 수입 +'+(state.stars*10)+'%');
+        sfx.upgrade();
+      }},
+    ],
+  });
+});
+
+// ---------- 토스트 / 모달 ----------
+function toast(icon, title, sub){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span class="t-icon">'+icon+'</span><div><div class="t-title">'+title+'</div>'+
+    (sub?'<div class="t-sub">'+sub+'</div>':'')+'</div>';
+  el.toasts.appendChild(t);
+  setTimeout(()=>t.remove(), 3600);
+  while(el.toasts.children.length > 4) el.toasts.firstChild.remove();
+}
+function showModal({icon, title, body, buttons}){
+  el.modalCard.innerHTML =
+    '<div class="m-icon">'+icon+'</div><h2>'+title+'</h2>'+
+    '<div class="m-body">'+body+'</div><div class="m-btns"></div>';
+  const wrap = el.modalCard.querySelector('.m-btns');
+  for(const b of buttons){
+    const btn = document.createElement('button');
+    btn.className = 'm-btn '+(b.primary?'primary':'ghost');
+    btn.textContent = b.label;
+    btn.addEventListener('click', ()=>{
+      el.overlay.classList.remove('show');
+      if(b.fn) b.fn();
+    });
+    wrap.appendChild(btn);
+  }
+  el.overlay.classList.add('show');
+}
+
+// ---------- 탭 ----------
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tabpane').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab-'+tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab==='up') renderUpgrades(true);
+    if(tab.dataset.tab==='stats') updateStats();
+  });
+});
+// 구매 배수
+document.querySelectorAll('.bm').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.bm').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    state.buyMode = b.dataset.mode;
+    updateMenuButtons();
+  });
+});
+
+// ---------- 헤더 버튼 ----------
+function syncSoundBtn(){ el.soundBtn.textContent = state.sound ? '🔊' : '🔇'; }
+el.soundBtn.addEventListener('click', ()=>{
+  state.sound = !state.sound;
+  syncSoundBtn();
+  if(state.sound) sfx.click();
+});
+el.saveBtn.addEventListener('click', ()=>{
+  save();
+  el.saveBtn.classList.add('saved');
+  el.saveBtn.textContent = '✓';
+  setTimeout(()=>{ el.saveBtn.classList.remove('saved'); el.saveBtn.textContent='💾'; }, 1200);
+});
+$('wipeBtn').addEventListener('click', ()=>{
+  showModal({
+    icon:'🗑️', title:'저장 데이터를 삭제할까요?',
+    body:'명성을 포함한 <b>모든 진행 상황</b>이 사라집니다.<br>되돌릴 수 없습니다.',
+    buttons:[
+      {label:'취소', ghost:true},
+      {label:'전부 삭제', primary:true, fn(){
+        try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+        wiping = true;
+        location.reload();
+      }},
+    ],
+  });
+});
+
+// ---------- HUD / 통계 ----------
+function updateHUD(){
+  const ps = perSec();
+  el.money.textContent = fmtWon(state.money);
+  el.persec.textContent = fmtWon(ps);
+  el.clickpow.textContent = fmtWon(clickPower(ps));
+  el.starChip.textContent = '★ '+state.stars;
+  // 만복 시간 표시
+  if(isFrenzy()){
+    el.frenzyBadge.style.display = 'block';
+    el.frenzyLeft.textContent = Math.ceil((state.frenzyUntil - Date.now())/1000);
+    document.body.classList.add('frenzy');
+  }else{
+    el.frenzyBadge.style.display = 'none';
+    document.body.classList.remove('frenzy');
+  }
+}
+function updateStats(){
+  el.stRun.textContent = fmtWon(state.runEarned);
+  el.stTotal.textContent = fmtWon(state.totalEarned);
+  el.stClicks.textContent = state.clicks.toLocaleString('ko-KR')+'회';
+  el.stCat.textContent = state.catClicks.toLocaleString('ko-KR')+'회';
+  el.stTime.textContent = fmtTime(state.playTime);
+  updatePrestige();
+}
+
+// ---------- 저장 / 불러오기 ----------
+let wiping = false;
+function save(){
+  if(wiping) return;
+  state.lastTs = Date.now();
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function load(){
+  let raw = null;
+  try{ raw = localStorage.getItem(SAVE_KEY); }catch(e){}
+  if(!raw) return;
+  try{
+    const s = JSON.parse(raw);
+    state = Object.assign(defaultState(), s);
+    state.items = s.items || {};
+    state.upgrades = s.upgrades || {};
+  }catch(e){ state = defaultState(); }
+}
+function applyOffline(){
+  const elapsed = (Date.now() - state.lastTs)/1000;
+  if(elapsed < 60) return;
+  const ps = perSec();
+  if(ps <= 0) return;
+  const capped = Math.min(elapsed, 8*3600);
+  const gain = ps * capped * 0.5;
+  if(gain < 1) return;
+  addMoney(gain);
+  showModal({
+    icon:'🌙', title:'다시 오셨군요!',
+    body:'자리를 비운 <b>'+fmtTime(elapsed)+'</b> 동안<br>단골들이 포장마차를 찾아왔습니다.<br><br>부재중 수입 <b>+'+fmtWon(gain)+'</b><br><span style="font-size:11px;color:var(--sub)">(최대 8시간 · 평소 수입의 50%)</span>',
+    buttons:[{label:'다시 장사 시작!', primary:true}],
+  });
+}
+
+// ---------- 메인 루프 ----------
+let lastTick = Date.now();
+setInterval(()=>{
+  const now = Date.now();
+  const dt = Math.min((now - lastTick)/1000, 5);
+  lastTick = now;
+  const ps = perSec();
+  if(ps > 0) addMoney(ps*dt);
+  state.playTime += dt;
+  if(now >= nextCatAt && !catVisible && !document.hidden){
+    showCat();
+    nextCatAt = Infinity; // 표시 중에는 재예약 금지 (클릭/타임아웃 시 재설정)
+  }
+  updateHUD();
+  updateMenuButtons();
+  updateUpgradeButtons();
+}, 100);
+
+// 구조 변화 감시(1초 주기): 새 업그레이드 해금 등
+setInterval(()=>{
+  renderUpgrades(false);
+  renderMenu();
+  if($('tab-stats').classList.contains('active')) updateStats();
+}, 1000);
+
+// 자동 저장
+setInterval(save, 15000);
+window.addEventListener('beforeunload', save);
+
+// ---------- 시작 ----------
+load();
+syncSoundBtn();
+document.querySelector('.bm[data-mode="'+state.buyMode+'"]')?.classList.add('active');
+if(state.buyMode !== '1') document.querySelector('.bm[data-mode="1"]').classList.remove('active');
+renderMenu();
+renderUpgrades(true);
+updateHUD();
+updateStats();
+applyOffline();
+if(state.clicks >= 20) el.hint.style.display = 'none';
+</script>
+</body>
+</html>

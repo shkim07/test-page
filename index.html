@@ -23,6 +23,7 @@
   --gold:#ffd166;
   --green:#5eeaa0;
   --red:#ff7b7b;
+  --ice:#8fd3ff;
   --radius:16px;
   --font-title:'Jua', 'Noto Sans KR', sans-serif;
   --font-body:'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
@@ -112,17 +113,27 @@ main{display:flex;flex:1 1 auto;min-height:0;}
 }
 #repWrap{
   display:flex;align-items:center;gap:10px;justify-content:center;margin-top:8px;
-  font-size:12.5px;
+  font-size:12.5px;flex-wrap:wrap;
 }
+#hearts{font-size:14px;letter-spacing:2px;filter:drop-shadow(0 0 6px rgba(255,80,80,.4));}
 #repTitle{
   font-family:var(--font-title);color:var(--gold);letter-spacing:1px;
   background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3);
   padding:3px 12px;border-radius:999px;
 }
-.rep-bar{width:130px;height:7px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;}
+.rep-bar{width:120px;height:7px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;}
 .rep-bar i{display:block;height:100%;width:0%;border-radius:6px;
   background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .4s;}
 #repPts{color:var(--sub);font-variant-numeric:tabular-nums;}
+#rushBadge{
+  display:none;margin:10px auto 0;width:fit-content;
+  font-family:var(--font-title);font-size:14.5px;color:#1d1302;
+  background:linear-gradient(120deg,#ffd166,#ff9f43);
+  padding:6px 16px;border-radius:999px;
+  box-shadow:0 0 22px rgba(255,170,60,.65);
+  animation:pulse .9s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
 /* ---------- 매대(보드) 프레임 ---------- */
 #boardArea{
@@ -208,8 +219,27 @@ main{display:flex;flex:1 1 auto;min-height:0;}
 .cell.burnt .t-emoji{filter:grayscale(1) brightness(.4) sepia(.4);}
 .cell.burnt{background:linear-gradient(170deg,#241408,#180d04);}
 .cell.burnt .t-name{color:#8a7a68;}
+/* 냉장 선반 */
+#storeWrap{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.store-label{
+  flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--ice);
+  display:flex;flex-direction:column;gap:2px;
+}
+.store-label small{font-size:10px;color:#7f95b8;font-weight:500;line-height:1.4;}
+#storeRow{display:grid;grid-template-columns:repeat(4, 1fr);gap:7px;flex:0 0 56%;touch-action:none;}
+.cell.store{
+  background:linear-gradient(170deg,#12263c,#0c1a2c);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.55), inset 0 0 0 1.5px rgba(143,211,255,.22);
+}
+.cell.store.locked{background:linear-gradient(170deg,#0d1a29,#09121e);}
+.cell.store .lk-cost{color:var(--ice);}
+.cell.store .frost{opacity:.3;font-size:18px;color:var(--ice);}
+.cell.store .f-bar i{background:var(--ice) !important;}
+.cell.store::before{
+  content:'❄';position:absolute;top:3px;left:5px;font-size:9px;color:var(--ice);opacity:.55;
+}
 
-/* ---------- 하단 독(요리/판매) ---------- */
+/* ---------- 하단 독(요리/폐기) ---------- */
 #dock{display:flex;gap:10px;margin-top:12px;align-items:stretch;}
 #spawnBtn{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -320,11 +350,20 @@ main{display:flex;flex:1 1 auto;min-height:0;}
   transition:border-color .2s;
 }
 .order-card.ready{border-color:rgba(94,234,160,.45);background:rgba(94,234,160,.05);}
+.order-card.vip{border-color:rgba(255,209,102,.55);background:rgba(255,209,102,.06);}
+.order-card.vip.ready{border-color:rgba(94,234,160,.6);}
+.order-card.reg{border-color:rgba(94,234,160,.3);}
 .o-cust{
   width:48px;height:48px;border-radius:50%;font-size:26px;
   display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.07);border:1px solid var(--line-strong);
 }
+.o-badge{
+  display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;
+  vertical-align:2px;margin-left:5px;letter-spacing:.5px;
+}
+.o-badge.vip{background:linear-gradient(120deg,#ffd166,#ff9f43);color:#3a2402;}
+.o-badge.reg{background:rgba(94,234,160,.18);color:var(--green);border:1px solid rgba(94,234,160,.4);}
 .o-req{font-size:14.5px;font-weight:700;}
 .o-req .have{font-weight:500;font-size:12px;color:var(--sub);}
 .o-req .have.ok{color:var(--green);}
@@ -388,6 +427,33 @@ main{display:flex;flex:1 1 auto;min-height:0;}
 .up-buy:active{transform:scale(.96);}
 .up-buy:disabled{background:rgba(255,255,255,.07);color:var(--sub);box-shadow:none;cursor:default;}
 .up-buy.maxed{background:rgba(94,234,160,.15);color:var(--green);box-shadow:none;cursor:default;}
+
+/* ---------- 목표(빚) 카드 ---------- */
+.goal-card{
+  border-radius:var(--radius);padding:18px;margin-bottom:14px;
+  background:linear-gradient(160deg, rgba(255,209,102,.1), rgba(255,120,60,.06));
+  border:1px solid rgba(255,209,102,.3);
+}
+.goal-card h3{font-family:var(--font-title);font-size:16px;color:var(--gold);font-weight:400;
+  display:flex;align-items:center;gap:8px;}
+.goal-card p{font-size:12.5px;color:#c9cfec;line-height:1.7;margin-top:8px;}
+.goal-card p b{color:var(--gold);font-size:14px;}
+.goal-bar{height:8px;border-radius:6px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:10px;}
+.goal-bar i{display:block;height:100%;width:0%;border-radius:6px;
+  background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .4s;}
+.goal-btn{
+  width:100%;margin-top:12px;padding:12px;border-radius:13px;
+  font-family:var(--font-title);font-size:14.5px;letter-spacing:.5px;
+  background:linear-gradient(160deg,#ffd166,#ff8c3b);color:#331c02;
+  box-shadow:0 6px 18px rgba(255,159,67,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  transition:transform .1s, filter .15s;
+}
+.goal-btn:hover{filter:brightness(1.06);}
+.goal-btn:active{transform:scale(.98);}
+.goal-btn:disabled{background:rgba(255,255,255,.08);color:var(--sub);box-shadow:none;cursor:default;}
+.goal-card.done{border-color:rgba(94,234,160,.45);
+  background:linear-gradient(160deg, rgba(94,234,160,.1), rgba(94,234,160,.03));}
+.goal-card.done h3{color:var(--green);}
 
 /* ---------- 도감 ---------- */
 .dex-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;}
@@ -514,10 +580,12 @@ main{display:flex;flex:1 1 auto;min-height:0;}
       <div id="hud">
         <div id="money">0원</div>
         <div id="repWrap">
+          <span id="hearts">❤️❤️❤️</span>
           <span id="repTitle">노점 새내기</span>
           <div class="rep-bar"><i id="repFill"></i></div>
           <span id="repPts">0 / 10</span>
         </div>
+        <div id="rushBadge">🔥 러시 타임! 보상 ×2 — <span id="rushLeft">60</span>초</div>
       </div>
 
       <div id="boardArea">
@@ -540,6 +608,12 @@ main{display:flex;flex:1 1 auto;min-height:0;}
           </svg>
           <div class="frame-lanterns"><span>🏮</span><span>🏮</span></div>
           <div id="board"></div>
+          <div id="storeWrap">
+            <span class="store-label">🧊 냉장 선반
+              <small>불이 닿지 않아 신선도가 멈춰요</small>
+            </span>
+            <div id="storeRow"></div>
+          </div>
           <div id="selBar">
             <span class="s-emoji" id="selEmoji"></span>
             <div class="s-info">
@@ -568,7 +642,7 @@ main{display:flex;flex:1 1 auto;min-height:0;}
       <nav id="tabs">
         <button class="tab active" data-tab="orders">주문<span class="badge"></span></button>
         <button class="tab" data-tab="up">업그레이드<span class="badge"></span></button>
-        <button class="tab" data-tab="stats">도감 · 통계<span class="badge"></span></button>
+        <button class="tab" data-tab="stats">목표 · 도감<span class="badge"></span></button>
       </nav>
 
       <section class="tabpane active" id="tab-orders">
@@ -576,8 +650,9 @@ main{display:flex;flex:1 1 auto;min-height:0;}
         <div class="pane-scroll">
           <div id="orderList"></div>
           <div class="order-note">
-            수입은 오직 <b style="color:var(--gold)">손님 주문</b>에서만! 시간 안에 전달하지 못하면 손님이 떠납니다.<br>
-            음식을 불 위에 오래 두면 타버리니 폐기함 🗑 을 잘 활용하세요.
+            수입은 오직 <b style="color:var(--gold)">손님 주문</b>에서만! 시간 안에 전달 못 하면 손님이 떠나고
+            <b style="color:var(--red)">❤️ 하트</b>를 잃습니다.<br>
+            하트가 다 떨어지면 <b style="color:var(--red)">폐업</b>! 명성 레벨 업으로 하트를 회복하세요.
           </div>
         </div>
       </section>
@@ -588,8 +663,15 @@ main{display:flex;flex:1 1 auto;min-height:0;}
       </section>
 
       <section class="tabpane" id="tab-stats">
-        <div class="pane-head"><span class="ttl">메뉴 도감</span></div>
+        <div class="pane-head"><span class="ttl">사장님의 목표</span></div>
         <div class="pane-scroll">
+          <div class="goal-card" id="debtCard">
+            <h3>💸 보증금 빚 갚기</h3>
+            <p>포장마차 보증금으로 빌린 <b>500만원</b>...<br>
+            남은 빚 <b id="debtLeft">500만원</b></p>
+            <div class="goal-bar"><i id="debtFill"></i></div>
+            <button class="goal-btn" id="payBtn" disabled>지금 가진 돈으로 갚기</button>
+          </div>
           <div class="dex-grid" id="dexGrid"></div>
           <div class="stat-list">
             <div class="stat-row"><span class="k">보유 자금</span><span class="v" id="stMoney">0원</span></div>
@@ -597,6 +679,7 @@ main{display:flex;flex:1 1 auto;min-height:0;}
             <div class="stat-row"><span class="k">합치기 횟수</span><span class="v" id="stMerges">0회</span></div>
             <div class="stat-row"><span class="k">폐기한 음식</span><span class="v" id="stTrash">0개</span></div>
             <div class="stat-row"><span class="k">완료한 주문</span><span class="v" id="stOrders">0건</span></div>
+            <div class="stat-row"><span class="k">폐업 횟수</span><span class="v" id="stClosed">0회</span></div>
             <div class="stat-row"><span class="k">만복 고양이 조우</span><span class="v" id="stCat">0회</span></div>
             <div class="stat-row"><span class="k">총 플레이 시간</span><span class="v" id="stTime">0초</span></div>
           </div>
@@ -635,14 +718,20 @@ const FOODS = [ // 티어 1 ~ 10
 const MAX_TIER = 10;
 const CAT = 99; // 만복 고양이 타일
 
-const COLS = 6, ROWS = 5, CELLS = COLS*ROWS;
-// 처음부터 열려 있는 칸: 가운데 4×3
+const COLS = 6, ROWS = 5;
+const CELLS = COLS*ROWS;      // 매대(불판) 칸: 0..29
+const STORE = 4;              // 냉장 선반 칸: 30..33
+const TOTAL = CELLS + STORE;
+const DEBT_TOTAL = 5000000;   // 보증금 빚 500만원
+
+// 처음부터 열려 있는 칸: 가운데 4×3 + 냉장 선반 1칸
 function initialUnlocked(){
-  const u = new Array(CELLS).fill(false);
+  const u = new Array(TOTAL).fill(false);
   for(let r=1;r<=3;r++) for(let c=1;c<=4;c++) u[r*COLS+c] = true;
+  u[CELLS] = true; // 냉장 선반 첫 칸
   return u;
 }
-// 잠긴 칸 가격: 중앙에서 가까운 순서로 저렴
+// 잠긴 매대 칸 가격: 중앙에서 가까운 순서로 저렴
 const CELL_PRICES = (()=>{
   const base = initialUnlocked();
   const locked = [];
@@ -657,6 +746,9 @@ const CELL_PRICES = (()=>{
   locked.forEach((x,idx)=>{ map[x.i] = prices[Math.min(idx, prices.length-1)]; });
   return map;
 })();
+const STORE_PRICES = {[CELLS+1]:5000, [CELLS+2]:80000, [CELLS+3]:1200000};
+function cellPrice(i){ return i < CELLS ? CELL_PRICES[i] : STORE_PRICES[i]; }
+function isStore(i){ return i >= CELLS; }
 
 // 명성 레벨
 const REP_TH = [0,10,30,70,150,300,600,1200,2500,5000];
@@ -679,21 +771,28 @@ const UPS = [
 ];
 
 const CUSTOMERS = ['🧓','👵','🧑','👩','👨‍💼','👩‍🎤','🧑‍🎓','👷','🧕','👮','🧙','🎅'];
+const VIP_CUSTS = ['🤵','👸','🎩','🕴️'];
 
 // ---------- 상태 ----------
-const SAVE_KEY = 'moonpocha_merge_v2';
+const SAVE_KEY = 'moonpocha_merge_v3';
 let state = defaultState();
 function defaultState(){
   return {
     money:0, totalEarned:0,
-    board:new Array(CELLS).fill(0),
-    born:new Array(CELLS).fill(0), // 음식이 불판에 오른 시각 (신선도 계산용)
+    board:new Array(TOTAL).fill(0),
+    born:new Array(TOTAL).fill(0), // 음식이 불판에 오른 시각 (신선도 계산용)
     unlocked:initialUnlocked(),
     rep:0,
+    hearts:3,
+    debt:DEBT_TOTAL,
+    debtCleared:false,
+    legend:false,   // 10단계 첫 완성 여부
+    closed:false,   // 폐업 상태
     ups:{pot:1, fire:0, dbl:0, service:0, plate:0, touch:0},
     orders:[null,null,null],
-    maxTier:1,
-    stats:{merges:0, trashed:0, orders:0, cat:0, playTime:0},
+    maxTier:1,      // 도감용 (폐업해도 유지)
+    runMax:1,       // 이번 영업에서 만든 최고 단계 (주문 생성 기준)
+    stats:{merges:0, trashed:0, orders:0, cat:0, closed:0, playTime:0},
     sound:true,
     seeded:false,
     savedAt:Date.now(),
@@ -725,6 +824,10 @@ function fmtTime(sec){
   const h = Math.floor(m/60);
   return h+'시간 '+(m%60)+'분';
 }
+function fmtClock(ms){
+  const s = Math.max(0, Math.ceil(ms/1000));
+  return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+}
 
 // ---------- 경제 계산 ----------
 function repLevel(){
@@ -735,13 +838,14 @@ function repLevel(){
 function sellBonus(){ return (1 + repLevel()*0.1) * (1 + state.ups.plate*0.2); }
 function orderBonus(){ return 4 * (1 + state.ups.service*0.25); }
 function sellValue(t){ return Math.round(10 * Math.pow(3, t-1) * sellBonus()); }
+function spawnCost(){ return 2 * Math.pow(3, state.ups.pot-1); }
 function addMoney(v){ state.money += v; state.totalEarned += v; }
-// 신선도: born 시각부터 lifetimeMs가 지나면 타버린다
+// 신선도: born 시각부터 lifetimeMs가 지나면 타버린다 (냉장 선반은 시간이 멈춤)
 function lifetimeMs(){ return 120e3 * (1 + 0.5*state.ups.fire); }
 function freshRatio(i){
   const b = state.born[i];
   if(!b) return 1;
-  return Math.max(0, 1 - (Date.now()-b)/lifetimeMs());
+  return Math.min(1, Math.max(0, 1 - (Date.now()-b)/lifetimeMs()));
 }
 
 // ---------- 사운드 ----------
@@ -768,21 +872,24 @@ const sfx = {
   order(){ beep(520, .09, .11, 0); setTimeout(()=>beep(660, .09, .11, 0), 90); setTimeout(()=>beep(880, .13, .11, 0), 180); },
   buy(){ beep(420, .08, .1, 100); setTimeout(()=>beep(640, .09, .1, 120), 70); },
   bad(){ beep(220, .12, .1, -60, 'sawtooth'); },
+  heart(){ beep(340, .16, .12, -180, 'sawtooth'); },
   cat(){ beep(880, .08, .12, 240); setTimeout(()=>beep(1180, .12, .12, 260), 90); },
 };
 
 // ---------- DOM ----------
 const $ = id => document.getElementById(id);
 const el = {
-  sky:$('sky'), board:$('board'), ghost:$('ghost'),
-  money:$('money'), repTitle:$('repTitle'), repFill:$('repFill'), repPts:$('repPts'),
+  sky:$('sky'), board:$('board'), storeRow:$('storeRow'), frame:$('boardFrame'), ghost:$('ghost'),
+  money:$('money'), hearts:$('hearts'), repTitle:$('repTitle'), repFill:$('repFill'), repPts:$('repPts'),
+  rushBadge:$('rushBadge'), rushLeft:$('rushLeft'),
   spawnBtn:$('spawnBtn'), spawnInfo:$('spawnInfo'), trashZone:$('trashZone'),
   selBar:$('selBar'), selEmoji:$('selEmoji'), selName:$('selName'), selPrice:$('selPrice'), selTrash:$('selTrash'),
   hint:$('hint'), orderList:$('orderList'), upList:$('upList'), dexGrid:$('dexGrid'),
+  debtLeft:$('debtLeft'), debtFill:$('debtFill'), payBtn:$('payBtn'), debtCard:$('debtCard'),
   toasts:$('toasts'), overlay:$('overlay'), modalCard:$('modalCard'),
   soundBtn:$('soundBtn'), saveBtn:$('saveBtn'),
   stMoney:$('stMoney'), stTotal:$('stTotal'), stMerges:$('stMerges'), stTrash:$('stTrash'),
-  stOrders:$('stOrders'), stCat:$('stCat'), stTime:$('stTime'),
+  stOrders:$('stOrders'), stClosed:$('stClosed'), stCat:$('stCat'), stTime:$('stTime'),
 };
 
 // ---------- 별 하늘 ----------
@@ -813,27 +920,30 @@ setInterval(()=>{
 
 // ---------- 보드 렌더링 ----------
 const cellDivs = [];
-const cellBars = new Array(CELLS).fill(null); // 신선도 게이지 <i> 캐시
+const cellBars = new Array(TOTAL).fill(null); // 신선도 게이지 <i> 캐시
 (function buildBoard(){
-  for(let i=0;i<CELLS;i++){
+  for(let i=0;i<TOTAL;i++){
     const d = document.createElement('div');
     d.className = 'cell';
     d.dataset.i = i;
-    el.board.appendChild(d);
+    (i < CELLS ? el.board : el.storeRow).appendChild(d);
     cellDivs.push(d);
   }
 })();
 function renderCell(i, animate){
   const d = cellDivs[i];
   const v = state.board[i];
-  d.className = 'cell';
+  d.className = 'cell' + (isStore(i) ? ' store' : '');
   cellBars[i] = null;
   if(!state.unlocked[i]){
     d.classList.add('locked');
-    d.innerHTML = '<span class="lk">🔒</span><span class="lk-cost">'+fmt(CELL_PRICES[i])+'</span>';
+    d.innerHTML = '<span class="lk">🔒</span><span class="lk-cost">'+fmt(cellPrice(i))+'</span>';
     return;
   }
-  if(v === 0){ d.innerHTML = ''; return; }
+  if(v === 0){
+    d.innerHTML = isStore(i) ? '<span class="frost">❄</span>' : '';
+    return;
+  }
   if(v === CAT){
     d.classList.add('cat-cell','tile-in');
     d.innerHTML = '<span class="t-emoji'+(animate?' pop-anim':'')+'">🐱</span><span class="t-name">만복이</span>';
@@ -853,22 +963,22 @@ function renderCell(i, animate){
   d.innerHTML = '<span class="t-emoji'+(animate?' pop-anim':'')+'">'+f.emoji+'</span><span class="t-name">'+f.name+'</span>'+
     '<span class="f-bar"><i style="width:'+(r*100)+'%"></i></span>';
   cellBars[i] = d.querySelector('.f-bar i');
-  if(r < .3) d.classList.add('warn');
+  if(r < .3 && !isStore(i)) d.classList.add('warn');
   if(selected === i) d.classList.add('sel');
 }
 function renderBoard(){
-  for(let i=0;i<CELLS;i++) renderCell(i);
+  for(let i=0;i<TOTAL;i++) renderCell(i);
 }
 
 // ---------- 유틸 ----------
-function emptyCells(){
+function emptyCells(){ // 매대(불판)의 빈 칸만 — 요리/고양이 등장 위치
   const out = [];
   for(let i=0;i<CELLS;i++) if(state.unlocked[i] && state.board[i]===0) out.push(i);
   return out;
 }
-function countTier(t){
+function countTier(t){ // 냉장 선반 포함 — 주문 전달에 쓸 수 있다
   let n = 0;
-  for(let i=0;i<CELLS;i++) if(state.board[i]===t) n++;
+  for(let i=0;i<TOTAL;i++) if(state.board[i]===t) n++;
   return n;
 }
 function floatAtCell(i, text){
@@ -892,7 +1002,8 @@ function shake(elm){
 
 // ---------- 신메뉴 발견 ----------
 function discover(t, viaCell){
-  if(t <= state.maxTier || t > MAX_TIER) return;
+  if(t > state.runMax) state.runMax = t;
+  if(t <= state.maxTier || t > MAX_TIER){ refreshOrderSlots(); return; }
   state.maxTier = t;
   const f = FOODS[t-1];
   const bonus = sellValue(t)*5;
@@ -902,22 +1013,33 @@ function discover(t, viaCell){
   if(viaCell !== undefined) floatAtCell(viaCell, '+'+fmtWon(bonus));
   renderDex();
   refreshOrderSlots();
+  if(t === MAX_TIER && !state.legend){
+    state.legend = true;
+    showModal({
+      icon:'🏆', title:'전설의 메뉴 완성!',
+      body:'🍶 <b>파전 & 막걸리</b> —<br>달빛 포차의 모든 메뉴를 정복했습니다!<br>도감이 완성되었어요.<br><br>이제 남은 목표는 빚 청산뿐!',
+      buttons:[{label:'감격스럽다!', primary:true}],
+    });
+  }
 }
 
 // ---------- 요리(스폰) ----------
 let spawnCooldown = false;
 function doSpawn(){
-  if(spawnCooldown) return;
+  if(spawnCooldown || state.closed) return;
   const empties = emptyCells();
   if(empties.length === 0){
     shake(el.spawnBtn);
     sfx.bad();
-    toast('😅','매대가 가득 찼어요!','합치거나 판매해서 자리를 만드세요');
+    toast('😅','매대가 가득 찼어요!','합치거나 폐기해서 자리를 만드세요');
     return;
   }
   spawnCooldown = true;
   el.spawnBtn.disabled = true;
   setTimeout(()=>{ spawnCooldown = false; el.spawnBtn.disabled = false; }, 350);
+
+  // 재료비: 가진 돈이 모자라면 있는 만큼만 (파산 방지)
+  state.money -= Math.min(spawnCost(), state.money);
 
   let t = state.ups.pot;
   const dblChance = 10 + state.ups.dbl*8;
@@ -925,14 +1047,16 @@ function doSpawn(){
   const i = empties[Math.floor(Math.random()*empties.length)];
   state.board[i] = t;
   state.born[i] = Date.now();
+  if(t > state.runMax) state.runMax = t;
   if(t > state.maxTier) state.maxTier = t;
   sfx.spawn();
   renderCell(i, true);
   updateOrderUI();
+  updateHUD();
 }
 el.spawnBtn.addEventListener('click', doSpawn);
 
-// ---------- 선택 / 이동 / 합치기 / 판매 ----------
+// ---------- 선택 / 이동 / 합치기 / 폐기 ----------
 let selected = null;
 function select(i){
   if(selected !== null) cellDivs[selected].classList.remove('sel');
@@ -972,7 +1096,7 @@ function collectCat(i){
   state.board[i] = 0;
   state.stats.cat++;
   state.rep += 2;
-  const gain = Math.round(sellValue(state.maxTier) * (2 + Math.random()*3));
+  const gain = Math.round(sellValue(Math.max(1, state.runMax)) * (2 + Math.random()*3));
   addMoney(gain);
   sfx.cat();
   toast('🐱','만복이가 복을 주고 갔어요!','+'+fmtWon(gain)+' · 명성 +2');
@@ -987,6 +1111,10 @@ function resolveAction(from, to){
   if(!state.unlocked[to]) return;
   if(a === 0 || a === CAT) return;
   if(b === CAT) return; // 고양이 위엔 못 놓음
+  if(isStore(to) && a < 0){ // 탄 음식은 냉장 선반에 못 넣는다
+    shake(cellDivs[to]); sfx.bad();
+    return;
+  }
   if(b === 0){
     state.board[to] = a; state.board[from] = 0;
     state.born[to] = state.born[from]; state.born[from] = 0;
@@ -1010,7 +1138,9 @@ function resolveAction(from, to){
   }else if(b === a && a === MAX_TIER){
     shake(cellDivs[to]); sfx.bad();
   }else{
-    // 자리 바꾸기 (탄 음식도 이동 가능)
+    // 자리 바꾸기 (탄 음식도 이동 가능) — 단, 탄 음식이 선반으로 밀려 들어가면 안 됨
+    if(isStore(to) && b !== 0 && a < 0){ shake(cellDivs[to]); sfx.bad(); return; }
+    if(isStore(from) && b < 0){ shake(cellDivs[to]); sfx.bad(); return; }
     state.board[from] = b; state.board[to] = a;
     const bb = state.born[to]; state.born[to] = state.born[from]; state.born[from] = bb;
     renderCell(from); renderCell(to);
@@ -1018,7 +1148,7 @@ function resolveAction(from, to){
   updateOrderUI();
 }
 function tryUnlockCell(i){
-  const price = CELL_PRICES[i];
+  const price = cellPrice(i);
   if(state.money < price){
     shake(cellDivs[i]); sfx.bad();
     floatAtCell(i, fmtWon(price)+' 필요');
@@ -1027,7 +1157,7 @@ function tryUnlockCell(i){
   state.money -= price;
   state.unlocked[i] = true;
   sfx.buy();
-  toast('🔓','매대 확장!','칸이 하나 늘었습니다');
+  toast(isStore(i)?'🧊':'🔓', isStore(i)?'냉장 선반 확장!':'매대 확장!', '칸이 하나 늘었습니다');
   renderCell(i, true);
   updateHUD();
 }
@@ -1035,9 +1165,9 @@ function tryUnlockCell(i){
 // ---------- 입력 (탭 + 드래그) ----------
 let drag = null; // {from, moved, startX, startY}
 let suppressClick = false;
-el.board.addEventListener('pointerdown', e=>{
+el.frame.addEventListener('pointerdown', e=>{
   const cellDiv = e.target.closest('.cell');
-  if(!cellDiv) return;
+  if(!cellDiv || state.closed) return;
   const i = +cellDiv.dataset.i;
   const v = state.board[i];
   if(!state.unlocked[i] || v === 0 || v === CAT) return; // 음식(탄 것 포함)만 드래그
@@ -1106,8 +1236,8 @@ document.addEventListener('pointerup', e=>{
   if(tgt.trash) trashCell(d.from);
   else resolveAction(d.from, tgt.cell);
 });
-el.board.addEventListener('click', e=>{
-  if(suppressClick) return;
+el.frame.addEventListener('click', e=>{
+  if(suppressClick || state.closed) return;
   const cellDiv = e.target.closest('.cell');
   if(!cellDiv) return;
   const i = +cellDiv.dataset.i;
@@ -1128,9 +1258,8 @@ el.board.addEventListener('click', e=>{
 let nextCatAt = Date.now() + 60e3 + Math.random()*90e3;
 let catCell = -1;
 setInterval(()=>{
-  if(document.hidden) return;
+  if(document.hidden || state.closed) return;
   const now = Date.now();
-  // 고양이가 사라졌는지(팔림/수집됨) 체크
   if(catCell >= 0 && state.board[catCell] !== CAT) catCell = -1;
   if(catCell < 0 && now >= nextCatAt){
     const empties = emptyCells();
@@ -1140,7 +1269,6 @@ setInterval(()=>{
       renderCell(catCell, true);
       toast('🐱','만복 고양이 등장!','매대 위의 고양이를 눌러 보세요');
       nextCatAt = now + 90e3 + Math.random()*120e3;
-      // 20초 후 자동으로 떠남
       const c = catCell;
       setTimeout(()=>{
         if(state.board[c] === CAT){
@@ -1149,10 +1277,15 @@ setInterval(()=>{
         }
       }, 20000);
     }else{
-      nextCatAt = now + 20e3; // 자리 없으면 잠시 후 재시도
+      nextCatAt = now + 20e3;
     }
   }
 }, 1000);
+
+// ---------- 러시 타임 ----------
+let rushUntil = 0;
+let nextRushAt = Date.now() + 150e3 + Math.random()*120e3;
+function rushActive(){ return Date.now() < rushUntil; }
 
 // ---------- 주문 ----------
 function orderSlots(){
@@ -1160,19 +1293,25 @@ function orderSlots(){
   return 1 + (lv>=1?1:0) + (lv>=3?1:0);
 }
 function makeOrder(){
-  const mt = Math.max(1, state.maxTier);
+  const mt = Math.max(1, state.runMax);
   const lo = Math.max(1, mt-3);
   const t = lo + Math.floor(Math.random()*(mt-lo+1));
   const count = (t >= mt) ? 1+Math.floor(Math.random()*2) : 1+Math.floor(Math.random()*3);
-  const limit = (90 + t*45) * 1000; // 높은 단계일수록 기다려 주는 시간이 길다
-  return {
-    tier:t, count,
-    cust:CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)],
-    limit, deadline:Date.now()+limit,
-  };
+  // 특수 손님: VIP(보상 3배·시간 절반) / 단골(명성 2배·느긋함)
+  const roll = Math.random();
+  const kind = roll < 0.10 ? 'vip' : (roll < 0.25 ? 'reg' : 'norm');
+  const tmul = kind==='vip' ? 0.55 : (kind==='reg' ? 1.3 : 1);
+  const limit = Math.round((90 + t*45) * tmul) * 1000;
+  const cust = kind==='vip'
+    ? VIP_CUSTS[Math.floor(Math.random()*VIP_CUSTS.length)]
+    : CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
+  return {tier:t, count, cust, kind, limit, deadline:Date.now()+limit};
 }
-function orderReward(o){ return Math.round(10*Math.pow(3,o.tier-1)*sellBonus()*o.count*orderBonus()); }
-function orderRep(o){ return o.tier*o.count; }
+function kindMoneyMul(o){ return o.kind==='vip' ? 3 : (o.kind==='reg' ? 1.2 : 1); }
+function orderReward(o){
+  return Math.round(10*Math.pow(3,o.tier-1)*sellBonus()*o.count*orderBonus()*kindMoneyMul(o));
+}
+function orderRep(o){ return o.tier*o.count*(o.kind==='reg' ? 2 : 1); }
 function refreshOrderSlots(){
   const slots = orderSlots();
   for(let i=0;i<slots;i++) if(!state.orders[i]) state.orders[i] = makeOrder();
@@ -1184,24 +1323,27 @@ function fulfillOrder(idx){
   const o = state.orders[idx];
   if(!o || countTier(o.tier) < o.count) return;
   let need = o.count;
-  for(let i=0;i<CELLS && need>0;i++){
+  for(let i=0;i<TOTAL && need>0;i++){ // 매대 음식부터 소모, 부족하면 선반에서
     if(state.board[i] === o.tier){
-      state.board[i] = 0; need--;
+      state.board[i] = 0; state.born[i] = 0; need--;
       if(selected === i) select(null);
       renderCell(i);
     }
   }
-  const reward = orderReward(o);
+  let reward = orderReward(o);
+  if(rushActive()) reward *= 2;
   const rep = orderRep(o);
   addMoney(reward);
   state.rep += rep;
   state.stats.orders++;
   sfx.order();
-  toast(o.cust, '주문 완료!', '+'+fmtWon(reward)+' · 명성 +'+rep);
+  const kindTxt = o.kind==='vip' ? 'VIP 주문 완료! ✨' : (o.kind==='reg' ? '단골 주문 완료! 💚' : '주문 완료!');
+  toast(o.cust, kindTxt, '+'+fmtWon(reward)+' · 명성 +'+rep+(rushActive()?' · 러시 ×2!':''));
   state.orders[idx] = null;
-  refillAt[idx] = Date.now() + 1200;
+  refillAt[idx] = Date.now() + (rushActive() ? 300 : 1200);
   renderOrders();
   checkRepLevel();
+  updateHUD();
 }
 function skipOrder(idx){
   if(Date.now() < nextSkipAt) return;
@@ -1223,12 +1365,14 @@ function renderOrders(){
     }
     const f = FOODS[o.tier-1];
     const card = document.createElement('div');
-    card.className = 'order-card';
+    card.className = 'order-card'+(o.kind!=='norm' ? ' '+o.kind : '');
     card.dataset.idx = i;
+    const badge = o.kind==='vip' ? '<span class="o-badge vip">✨ VIP</span>'
+                : o.kind==='reg' ? '<span class="o-badge reg">💚 단골</span>' : '';
     card.innerHTML =
       '<div class="o-cust">'+o.cust+'</div>'+
       '<div>'+
-        '<div class="o-req">'+f.emoji+' '+f.name+' × '+o.count+' <span class="have"></span></div>'+
+        '<div class="o-req">'+f.emoji+' '+f.name+' × '+o.count+badge+' <span class="have"></span></div>'+
         '<div class="o-reward">보상 <b>'+fmtWon(orderReward(o))+'</b> · 명성 +'+orderRep(o)+' · ⏱ <span class="o-time"></span></div>'+
       '</div>'+
       '<div class="o-btns">'+
@@ -1241,10 +1385,6 @@ function renderOrders(){
     el.orderList.appendChild(card);
   }
   updateOrderUI();
-}
-function fmtClock(ms){
-  const s = Math.max(0, Math.ceil(ms/1000));
-  return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 }
 function updateOrderUI(){
   const cards = el.orderList.querySelectorAll('.order-card');
@@ -1278,12 +1418,105 @@ function checkRepLevel(){
   const lv = repLevel();
   if(lv > lastRepLv){
     lastRepLv = lv;
-    toast('⭐','명성 레벨 업!',''+REP_TITLES[lv]+' · 음식 단가 +'+(lv*10)+'%');
+    let sub = REP_TITLES[lv]+' · 음식 단가 +'+(lv*10)+'%';
+    if(state.hearts < 3){ state.hearts++; sub += ' · 하트 회복 ❤️'; }
+    toast('⭐','명성 레벨 업!', sub);
     sfx.order();
     refreshOrderSlots();
     renderUps();
   }
   updateHUD();
+}
+
+// ---------- 하트 / 폐업 ----------
+let gameOverShown = false;
+function loseHeart(){
+  state.hearts = Math.max(0, state.hearts - 1);
+  sfx.heart();
+  updateHUD();
+  if(state.hearts <= 0) gameOver();
+}
+function gameOver(){
+  if(gameOverShown) return;
+  gameOverShown = true;
+  if(!state.closed) state.stats.closed++; // 새로고침 복원 시 중복 집계 방지
+  state.closed = true;
+  select(null);
+  save();
+  showModal({
+    icon:'😢', title:'폐업했습니다...',
+    body:'손님들의 마음이 떠나버렸어요.<br><br>'+
+      '이번 영업 — 누적 수입 <b>'+fmtWon(state.totalEarned)+'</b> · 완료 주문 <b>'+state.stats.orders+'건</b><br><br>'+
+      '<span style="color:var(--sub);font-size:12px">명성 · 도감 · 갚은 빚은 그대로 유지됩니다.<br>돈, 매대 확장, 설비는 초기화돼요.</span>',
+    buttons:[{label:'🌅 다시 개업하기', primary:true, fn(){ runReset(); }}],
+  });
+}
+function seedBoard(){
+  const empties = emptyCells();
+  for(let k=0;k<4 && k<empties.length;k++){
+    state.board[empties[k]] = (k===3 ? 2 : 1);
+    state.born[empties[k]] = Date.now();
+  }
+  if(state.runMax < 2) state.runMax = 2;
+  if(state.maxTier < 2) state.maxTier = 2;
+}
+function runReset(){
+  gameOverShown = false;
+  state.closed = false;
+  state.money = 0;
+  state.hearts = 3;
+  state.ups = {pot:1, fire:0, dbl:0, service:0, plate:0, touch:0};
+  state.board = new Array(TOTAL).fill(0);
+  state.born = new Array(TOTAL).fill(0);
+  state.unlocked = initialUnlocked();
+  state.orders = [null,null,null];
+  for(let i=0;i<refillAt.length;i++) refillAt[i] = 0;
+  state.runMax = 2;
+  catCell = -1;
+  seedBoard();
+  select(null);
+  renderBoard();
+  refreshOrderSlots();
+  renderUps();
+  updateHUD();
+  updateGoals();
+  toast('🌅','다시 개업!','명성과 도감, 갚은 빚은 그대로예요');
+  save();
+}
+
+// ---------- 빚 갚기 ----------
+function payDebt(){
+  const pay = Math.min(state.money, state.debt);
+  if(pay <= 0) return;
+  state.money -= pay;
+  state.debt -= pay;
+  sfx.buy();
+  toast('💸','빚 상환!','-'+fmtWon(pay)+' · 남은 빚 '+fmtWon(state.debt));
+  if(state.debt <= 0 && !state.debtCleared){
+    state.debtCleared = true;
+    sfx.order();
+    showModal({
+      icon:'🎆', title:'빚 청산 완료!',
+      body:'보증금 빚 <b>500만원</b>을 모두 갚았습니다.<br>'+
+        '달빛 포차는 이제 온전히 당신의 것!<br><br>'+
+        '골목의 전설이 된 것을 축하합니다. 🏮<br>'+
+        '<span style="color:var(--sub);font-size:12px">영업은 계속됩니다 — 도감 완성과 명성 만렙에 도전해 보세요.</span>',
+      buttons:[{label:'🏮 계속 영업하기', primary:true}],
+    });
+  }
+  updateHUD();
+  updateGoals();
+  save();
+}
+el.payBtn.addEventListener('click', payDebt);
+function updateGoals(){
+  const done = state.debt <= 0;
+  el.debtCard.classList.toggle('done', done);
+  el.debtLeft.textContent = done ? '완납! 🎉' : fmtWon(state.debt);
+  el.debtFill.style.width = (100 * (1 - state.debt/DEBT_TOTAL))+'%';
+  el.payBtn.disabled = done || state.money <= 0;
+  el.payBtn.textContent = done ? '✅ 상환 완료' :
+    '지금 가진 돈으로 갚기'+(state.money>0 ? ' ('+fmtWon(Math.min(state.money,state.debt))+')' : '');
 }
 
 // ---------- 설비 업그레이드 ----------
@@ -1316,7 +1549,6 @@ function renderUps(){
 }
 function nextDesc(u){
   const cur = state.ups[u.id];
-  // 다음 레벨 기준의 설명 값만 간단히 표기
   if(u.id==='pot') return FOODS[Math.min(cur, MAX_TIER-1)].name+' 등장';
   if(u.id==='fire') return Math.round(120*(1+0.5*(cur+1)))+'초';
   if(u.id==='dbl') return (10+(cur+1)*8)+'%';
@@ -1372,6 +1604,7 @@ function renderDex(){
 // ---------- HUD / 통계 ----------
 function updateHUD(){
   el.money.textContent = fmtWon(state.money);
+  el.hearts.textContent = '❤️'.repeat(state.hearts)+'🖤'.repeat(3-state.hearts);
   const lv = repLevel();
   el.repTitle.textContent = '★'+lv+' '+REP_TITLES[lv];
   const cur = REP_TH[lv];
@@ -1384,7 +1617,13 @@ function updateHUD(){
     el.repPts.textContent = fmt(state.rep)+' (최고)';
   }
   const potFood = FOODS[state.ups.pot-1];
-  el.spawnInfo.textContent = potFood.emoji+' '+potFood.name+' 등장';
+  el.spawnInfo.textContent = potFood.emoji+' '+potFood.name+' 등장 · 재료비 '+fmtWon(spawnCost());
+  if(rushActive()){
+    el.rushBadge.style.display = 'block';
+    el.rushLeft.textContent = Math.ceil((rushUntil - Date.now())/1000);
+  }else{
+    el.rushBadge.style.display = 'none';
+  }
 }
 function updateStats(){
   el.stMoney.textContent = fmtWon(state.money);
@@ -1392,6 +1631,7 @@ function updateStats(){
   el.stMerges.textContent = state.stats.merges.toLocaleString('ko-KR')+'회';
   el.stTrash.textContent = state.stats.trashed.toLocaleString('ko-KR')+'개';
   el.stOrders.textContent = state.stats.orders.toLocaleString('ko-KR')+'건';
+  el.stClosed.textContent = state.stats.closed.toLocaleString('ko-KR')+'회';
   el.stCat.textContent = state.stats.cat.toLocaleString('ko-KR')+'회';
   el.stTime.textContent = fmtTime(state.stats.playTime);
 }
@@ -1432,7 +1672,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
     tab.classList.add('active');
     $('tab-'+tab.dataset.tab).classList.add('active');
     if(tab.dataset.tab==='up') renderUps();
-    if(tab.dataset.tab==='stats'){ renderDex(); updateStats(); }
+    if(tab.dataset.tab==='stats'){ renderDex(); updateStats(); updateGoals(); }
   });
 });
 
@@ -1452,7 +1692,7 @@ el.saveBtn.addEventListener('click', ()=>{
 $('wipeBtn').addEventListener('click', ()=>{
   showModal({
     icon:'🗑️', title:'저장 데이터를 삭제할까요?',
-    body:'매대 · 자금 · 명성 등 <b>모든 진행 상황</b>이 사라집니다.<br>되돌릴 수 없습니다.',
+    body:'매대 · 자금 · 명성 · 빚 진행까지 <b>모든 진행 상황</b>이 사라집니다.<br>되돌릴 수 없습니다.',
     buttons:[
       {label:'취소', ghost:true},
       {label:'전부 삭제', primary:true, fn(){
@@ -1481,12 +1721,12 @@ function load(){
     state = Object.assign(d, s);
     state.ups = Object.assign(d.ups, s.ups||{});
     state.stats = Object.assign(d.stats, s.stats||{});
-    if(!Array.isArray(state.board) || state.board.length !== CELLS) state.board = d.board;
-    if(!Array.isArray(state.born) || state.born.length !== CELLS) state.born = d.born;
-    if(!Array.isArray(state.unlocked) || state.unlocked.length !== CELLS) state.unlocked = d.unlocked;
+    if(!Array.isArray(state.board) || state.board.length !== TOTAL) state.board = d.board;
+    if(!Array.isArray(state.born) || state.born.length !== TOTAL) state.born = d.born;
+    if(!Array.isArray(state.unlocked) || state.unlocked.length !== TOTAL) state.unlocked = d.unlocked;
     if(!Array.isArray(state.orders)) state.orders = [null,null,null];
     // 저장된 고양이는 떠난 것으로 처리
-    for(let i=0;i<CELLS;i++) if(state.board[i] === CAT) state.board[i] = 0;
+    for(let i=0;i<TOTAL;i++) if(state.board[i] === CAT) state.board[i] = 0;
     // 접속하지 않은 시간만큼 불과 손님 시계를 뒤로 미룬다 (자리 비운 사이엔 안 탐)
     const delta = Date.now() - (state.savedAt || Date.now());
     if(delta > 0) shiftTimes(delta);
@@ -1494,12 +1734,20 @@ function load(){
 }
 
 // ---------- 메인 루프 ----------
-// 음식 신선도 갱신 + 타버림 처리
+// 음식 신선도 갱신 + 타버림 처리 (냉장 선반은 시간이 흐르지 않음)
+let lastFoodTick = Date.now();
 function tickFood(){
+  const now = Date.now();
+  const dt = Math.min(now - lastFoodTick, 1500);
+  lastFoodTick = now;
   let burned = 0;
-  for(let i=0;i<CELLS;i++){
+  for(let i=0;i<TOTAL;i++){
     const v = state.board[i];
     if(v < 1 || v > MAX_TIER) continue;
+    if(isStore(i)){
+      if(state.born[i]) state.born[i] += dt; // 냉장: 나이 들지 않음
+      continue;
+    }
     const r = freshRatio(i);
     if(r <= 0){
       state.board[i] = -v; // 타버림
@@ -1520,7 +1768,7 @@ function tickFood(){
     toast('🔥','음식이 타버렸어요!', (burned>1 ? burned+'개가 못 먹게 됐어요 · ' : '')+'폐기함 🗑 에 버리세요');
   }
 }
-// 주문 만료 + 새 손님 도착
+// 주문 만료(하트 차감) + 새 손님 도착
 function tickOrders(){
   const now = Date.now();
   const slots = orderSlots();
@@ -1529,10 +1777,11 @@ function tickOrders(){
     const o = state.orders[i];
     if(o && now > o.deadline){
       state.orders[i] = null;
-      refillAt[i] = now + 5000;
-      toast(o.cust, '손님이 그냥 떠났어요 😢', '시간 안에 전달하지 못했어요');
+      refillAt[i] = now + (rushActive() ? 300 : 5000);
+      toast(o.cust, '손님이 그냥 떠났어요 💔', '하트를 잃었습니다...');
+      loseHeart();
       changed = true;
-    }else if(!o && refillAt[i] && now >= refillAt[i]){
+    }else if(!o && refillAt[i] && (now >= refillAt[i] || rushActive())){
       state.orders[i] = makeOrder();
       refillAt[i] = 0;
       changed = true;
@@ -1542,28 +1791,42 @@ function tickOrders(){
   }
   if(changed) renderOrders();
 }
+// 러시 타임 발동
+function tickRush(){
+  const now = Date.now();
+  if(now >= nextRushAt && !rushActive()){
+    rushUntil = now + 60e3;
+    nextRushAt = rushUntil + 240e3 + Math.random()*180e3;
+    toast('🔥','러시 타임!','60초 동안 주문 보상 ×2 · 손님 즉시 도착');
+    sfx.order();
+  }
+}
 setInterval(()=>{
-  if(document.hidden) return;
+  if(document.hidden || state.closed) return;
   state.stats.playTime += 0.5;
   tickFood();
   tickOrders();
+  tickRush();
   updateHUD();
   updateUpButtons();
   updateOrderUI();
-  if($('tab-stats').classList.contains('active')) updateStats();
+  if($('tab-stats').classList.contains('active')){ updateStats(); updateGoals(); }
 }, 500);
 // 탭이 백그라운드에 있는 동안에는 불도, 손님 시계도 멈춘다
 let hiddenAt = null;
 function shiftTimes(delta){
-  for(let i=0;i<CELLS;i++) if(state.born[i]) state.born[i] += delta;
+  for(let i=0;i<TOTAL;i++) if(state.born[i]) state.born[i] += delta;
   for(const o of state.orders) if(o) o.deadline += delta;
   for(let i=0;i<refillAt.length;i++) if(refillAt[i]) refillAt[i] += delta;
   nextCatAt += delta;
+  nextRushAt += delta;
+  if(rushUntil > Date.now() - delta) rushUntil += delta;
 }
 document.addEventListener('visibilitychange', ()=>{
   if(document.hidden){ hiddenAt = Date.now(); }
   else if(hiddenAt !== null){
     shiftTimes(Date.now() - hiddenAt);
+    lastFoodTick = Date.now();
     hiddenAt = null;
   }
 });
@@ -1573,14 +1836,8 @@ window.addEventListener('beforeunload', save);
 // ---------- 시작 ----------
 load();
 if(!state.seeded){
-  // 첫 시작: 어묵 3개 + 붕어빵 1개를 깔아준다
   state.seeded = true;
-  const empties = emptyCells();
-  for(let k=0;k<4 && k<empties.length;k++){
-    state.board[empties[k]] = (k===3 ? 2 : 1);
-    state.born[empties[k]] = Date.now();
-  }
-  state.maxTier = 2;
+  seedBoard();
 }
 lastRepLv = repLevel();
 syncSoundBtn();
@@ -1590,7 +1847,9 @@ renderUps();
 renderDex();
 updateHUD();
 updateStats();
+updateGoals();
 if(state.stats.merges >= 8) el.hint.style.display = 'none';
+if(state.closed) gameOver(); // 폐업 상태로 저장돼 있으면 다시 안내
 </script>
 </body>
 </html>
